@@ -10,6 +10,8 @@ const path = require("path");
 //Base URL for the API
 //const base_url = "https://api.example.com";
 const base_url = "http://localhost:3000";
+app.set("views", path.join(__dirname, "/public/views"));
+app.set("view engine", "ejs");
 
 //Set the template engine
 app.set("views" , path.join(__dirname, "/public/views"));
@@ -41,8 +43,12 @@ app.get("/users/:id", async (req, res) => {
 });
 
 app.get("/create", (req, res) => {
-    res.render("/create");
+    res.render("create");
 });
+app.get("/login", (req, res) => {
+    res.render("login");  
+});
+
 
 // app.post("/create", async (req, res) => {
 //     try{
