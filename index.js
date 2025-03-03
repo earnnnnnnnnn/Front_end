@@ -23,7 +23,7 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users');
-        res.render("Users/users", { users: response.data });
+        res.render("head", { users: response.data });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
@@ -40,22 +40,22 @@ app.get("/", async (req, res) => {
 //     }
 // });
 
-app.get("/create", (req, res) => {
-    res.render("Users/create");
-});
+// app.get("/create", (req, res) => {
+//     res.render("Users/create");
+// });
 
-app.post("/create", async (req, res) => {
-    try{
-        const data = {username: req.body.username, password:req.body.password, email: req.body.email, phone: req.body.phone};
+// app.post("/create", async (req, res) => {
+//     try{
+//         const data = {username: req.body.username, password:req.body.password, email: req.body.email, phone: req.body.phone};
         
-        await axios.post(base_url + '/users', data);
+//         await axios.post(base_url + '/users', data);
 
-        res.redirect("/");
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
+//         res.redirect("/");
+//     }catch(err){
+//         console.error(err);
+//         res.status(500).send('Error');
+//     }
+// });
 
 // app.get("/update/:id", async (req, res) => {
 //     try{

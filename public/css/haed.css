@@ -1,0 +1,217 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  ul {
+    list-style: none;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  /* Header */
+  header {
+    background: #f4f4f4;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .logo img {
+    width: 150px;
+  }
+  nav ul {
+    display: flex;
+    gap: 15px;
+  }
+  nav ul li a {
+    padding: 5px 10px;
+    transition: background 0.3s;
+  }
+  nav ul li a:hover {
+    background: #ddd;
+    border-radius: 4px;
+  }
+
+  /* Hero Section */
+  .hero {
+    background: url('hero-bg.jpg') no-repeat center center/cover;
+    height: 400px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .hero .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  .btn {
+    display: inline-block;
+    background: #ff6f61;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+  .btn:hover {
+    background: #ff3b2f;
+  }
+
+  /* Featured Cameras */
+  .featured-cameras {
+    padding: 40px 0;
+    background: #fafafa;
+  }
+  .featured-cameras h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  .cameras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+  }
+  .camera {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .camera h3 {
+    margin: 10px 0;
+  }
+  .camera p {
+    color: #ff6f61;
+    font-weight: bold;
+  }
+
+  /* Search & Filter Section */
+  .search-filter {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .search-filter h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  .search-filter form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .search-filter input[type="text"],
+  .search-filter select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 200px;
+  }
+  .search-filter button {
+    padding: 10px 20px;
+    border: none;
+    background: #ff6f61;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .search-filter button:hover {
+    background: #ff3b2f;
+  }
+
+  /* Testimonials */
+  .testimonials {
+    padding: 40px 20px;
+    background: #f4f4f4;
+    text-align: center;
+  }
+  .testimonials h2 {
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+  }
+  .testimonial {
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* Footer */
+  footer {
+    background: #333;
+    color: #fff;
+    padding: 20px 0;
+  }
+  footer .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer ul {
+    display: flex;
+    gap: 15px;
+  }
+  footer ul li a {
+    color: #fff;
+    transition: color 0.3s;
+  }
+  footer ul li a:hover {
+    color: #ff6f61;
+  }
+  footer .social a {
+    margin-right: 10px;
+  }
+  footer p {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    header .container {
+      flex-direction: column;
+    }
+    footer .footer-content {
+      flex-direction: column;
+    }
+  }
