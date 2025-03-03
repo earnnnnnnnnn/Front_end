@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 * {
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth; 
   }
   body {
     font-family: Arial, sans-serif;
@@ -35,17 +40,20 @@
   header .container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
   }
   header .logo img {
     width: 150px;
   }
   nav ul {
-    margin-top: -20px;
+    margin-top: -50px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: right;
     gap: 20px;
   }
   nav ul li a {
+    font-size: 1.2rem;
     padding: 10px 1px;
     transition: background 0.3s;
   }
@@ -57,8 +65,8 @@
     display: flex;
     justify-content: flex-start;
     margin-right: 300px;
-    margin-top: 20px;
-    max-width: 50px;
+    margin-top: 10px;
+    max-width: 100px;
     height: auto;
     display: block;
   }
@@ -66,7 +74,7 @@
   /* Hero Section */
   .hero {
     margin-top: 20px;
-    background: url('/public/image/cannon EOS 200D.png') no-repeat center center/cover;
+    background: url('../image/camera.png') no-repeat center center/cover;
     height: 600px;
     position: relative;
     display: flex;
