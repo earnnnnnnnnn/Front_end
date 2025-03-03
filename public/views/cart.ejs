@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Shopping Cart Section -->
+        <div class="cart">
+            <h2>Shopping Cart</h2>
+            <p class="item-count">0 Items</p> <!-- จะอัพเดตด้วย JS -->
+
+            <!-- Placeholder for cart items -->
+            <div class="cart-items-list"></div>
+
+            <a href="#head" class="back">← Back to shop</a>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary">
+            <h2>Summary</h2>
+            <div class="summary-item">
+                <span>ITEMS</span>
+                <span id="total-items">0</span> <!-- จะอัพเดตด้วย JS -->
+            </div>
+
+            <div class="summary-item">
+                <span>SHIPPING</span>
+                <select>
+                    <option>Standard Delivery - €5.00</option>
+                </select>
+            </div>
+
+            <div class="summary-item total">
+                <span>TOTAL PRICE</span>
+                <span id="total-price">€0.00</span> <!-- จะอัพเดตด้วย JS -->
+            </div>
+
+            <button class="checkout" onclick="checkout()">CHECKOUT</button>
+        </div>
+    </div>
+
+    <script src="cart.js"></script>
+</body>
+</html>
