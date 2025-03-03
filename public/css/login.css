@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+}
 body{
     margin: 0;
     padding: 0;
@@ -89,16 +93,16 @@ input[ type = "submit"]:hover{
     border-color: #2691d9;
     transition: .5s;
 }
-.signup_link{
+.register_link{
     margin: 30px 0;
     text-align: center;
     font-size: 16px;
     color: #666666;
 }
-.signup_link a{
+.register_link a{
     color: #ff6f61;
     text-decoration: none;
 }
-.signup_link a:hover{
+.register_link a:hover{
     text-decoration: underline;
 }
