@@ -145,9 +145,14 @@
   .camera {
     background: #fff;
     padding: 15px;
-    border: 1px solid #ddd;
+    border: 2px solid transparent;
     border-radius: 4px;
     text-align: center;
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  .camera:hover {
+    border: 2px solid #fff; /* เปลี่ยนสีกรอบเมื่อ Hover */
+    box-shadow: 0px .3px 12px #333; /* เพิ่มเงานุ่ม */
   }
   .camera h3 {
     margin: 10px 0;
