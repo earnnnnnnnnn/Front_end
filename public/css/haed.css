@@ -16,13 +16,13 @@
     list-style: none;
   }
   img {
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     display: block;
   }
   .container {
-    width: 90%;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1500px;
     margin: auto;
   }
 
@@ -34,29 +34,40 @@
   }
   header .container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
   header .logo img {
     width: 150px;
   }
   nav ul {
+    margin-top: -20px;
     display: flex;
-    gap: 15px;
+    justify-content: flex-end;
+    gap: 20px;
   }
   nav ul li a {
-    padding: 5px 10px;
+    padding: 10px 1px;
     transition: background 0.3s;
   }
   nav ul li a:hover {
     background: #ddd;
     border-radius: 4px;
   }
+  .logo img {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 300px;
+    margin-top: 20px;
+    max-width: 50px;
+    height: auto;
+    display: block;
+  }
 
   /* Hero Section */
   .hero {
-    background: url('hero-bg.jpg') no-repeat center center/cover;
-    height: 400px;
+    margin-top: 20px;
+    background: url('/public/image/cannon EOS 200D.png') no-repeat center center/cover;
+    height: 600px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -122,6 +133,11 @@
   .camera p {
     color: #ff6f61;
     font-weight: bold;
+  }
+  .camera img {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 
   /* Search & Filter Section */
