@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../css/paymentfrom.css">
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-form">
+            <h2>Delivery Information</h2>
+            <form action="/confirm-order" method="POST">
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="input-group">
+                    <label>Mobile Number</label>
+                    <input type="text" name="phone" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label>City</label>
+                    <input type="text" name="city" required>
+                </div>
+                <div class="input-group">
+                    <label>State</label>
+                    <input type="text" name="state" required>
+                </div>
+                <div class="input-group">
+                    <label>ZIP</label>
+                    <input type="text" name="zip" required>
+                </div>
+                <div class="input-group">
+                    <label>Address</label>
+                    <input type="text" name="address" required>
+                </div>
+
+                <h3>Schedule Delivery</h3>
+                <div class="input-group">
+                    <input type="checkbox" id="schedule" name="schedule">
+                    <label for="schedule">Enable Scheduled Delivery</label>
+                </div>
+                <div class="input-group">
+                    <label>Dates</label>
+                    <input type="date" name="delivery_date">
+                </div>
+                <div class="input-group">
+                    <label>Note</label>
+                    <textarea name="note" placeholder="Type your note"></textarea>
+                </div>
+
+                <h3>Payment Method</h3>
+                <div class="payment-methods">
+                    <label><input type="radio" name="payment" value="online"> Online Payment</label>
+                    <label><input type="radio" name="payment" value="cod" checked> Cash on Delivery</label>
+                    <label><input type="radio" name="payment" value="pos"> POS on Delivery</label>
+                </div>
+
+                <button type="submit" class="confirm-btn">Confirm Order</button>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <% cart.forEach(item => { %>
+                <div class="cart-item">
+                    <p><%= item.name %> (x<%= item.quantity %>) - $<%= (item.price * item.quantity).toFixed(2) %></p>
+                </div>
+            <% }); %>
+            <p><strong>Subtotal: $<%= total.toFixed(2) %></strong></p>
+            <p><strong>Shipping: $5.00</strong></p>
+            <p><strong>Total: $<%= (total + 5).toFixed(2) %></strong></p>
+        </div>
+    </div>
+</body>
+</html>
