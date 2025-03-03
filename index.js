@@ -60,6 +60,16 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
+app.get("/users/:id", async (req, res) => {
+    try{
+        const response = await axios.get(base_url + '/users/' + req.params.id);
+        res.render("rentalProcess", { book: response.data });
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
+
 
 app.get("/create", (req, res) => {
     res.render("create");
@@ -78,6 +88,9 @@ app.get("/cart", (req, res) => {
 });
 app.get("/head", (req, res) => {
     res.render("head");  
+});
+app.get("/rentalProcess", (req, res) => {
+    res.render("rentalProcess");  
 });
 
 
