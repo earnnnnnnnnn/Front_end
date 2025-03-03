@@ -1,0 +1,114 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Login Box Styling */
+.login-box {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+/* Header Styling */
+.login-box headder {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Input Box Styling */
+.input-box {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-field:focus {
+    border-color: #007bff;
+}
+
+/* Forgot Section Styling */
+.forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.forgot a:hover {
+    text-decoration: underline;
+}
+
+/* Remember Me Checkbox Styling */
+.forgot label {
+    font-size: 14px;
+}
+
+/* Submit Button Styling */
+.input-submit {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-btn {
+    display: none;
+}
+
+.submit-btn + label {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    border: none;
+}
+
+.submit-btn + label:hover {
+    background-color: #0056b3;
+}
+
+/* Sign Up Link Styling */
+.sign-up-link {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.sign-up-link a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.sign-up-link a:hover {
+    text-decoration: underline;
+}
