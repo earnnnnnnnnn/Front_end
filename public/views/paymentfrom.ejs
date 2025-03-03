@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <link rel="stylesheet" href="../css/paymentfrom.css">
+    <link rel="stylesheet" href="test.css">
 </head>
 <body>
     <div class="container">
@@ -30,10 +30,6 @@
                 <div class="input-group">
                     <label>State</label>
                     <input type="text" name="state" required>
-                </div>
-                <div class="input-group">
-                    <label>ZIP</label>
-                    <input type="text" name="zip" required>
                 </div>
                 <div class="input-group">
                     <label>Address</label>
@@ -65,7 +61,7 @@
             </form>
         </div>
 
-        <div class="order-summary">
+        <!-- <div class="order-summary">
             <h2>Order Summary</h2>
             <% cart.forEach(item => { %>
                 <div class="cart-item">
@@ -75,7 +71,7 @@
             <p><strong>Subtotal: $<%= total.toFixed(2) %></strong></p>
             <p><strong>Shipping: $5.00</strong></p>
             <p><strong>Total: $<%= (total + 5).toFixed(2) %></strong></p>
-        </div>
+        </div> -->
     </div>
 </body>
 </html>
