@@ -12,9 +12,10 @@
         <div class="cart">
             <h2>Shopping Cart</h2>
             <p class="item-count">0 Items</p> 
-            <div class="cart-items-list"></div>
+            <div class="cart-items-list"></div> <!-- รายการสินค้า -->
             <a href="/" class="back">← Back to shop</a>
         </div>     
+        
         <div class="summary">
             <h2>Summary</h2>
             <div class="summary-item">
@@ -23,11 +24,14 @@
             </div>
             <div class="summary-item">
                 <span>SHIPPING</span>
-                <span id="total-items">FREE</span> 
+                <span>FREE</span> 
             </div>
-            
+            <div class="summary-item">
+                <span>TOTAL PRICE</span>
+                <span id="total-price">0</span> 
+            </div>
 
-            <button href="/" class="checkout" onclick="checkout()">CHECKOUT</button>
+            <button class="checkout" onclick="checkout()">CHECKOUT</button>
         </div>
     </div>
 
