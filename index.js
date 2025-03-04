@@ -59,6 +59,17 @@ app.get("/detail", async (req, res) => {
         res.status(500).send('Error');
     }
 });
+app.get("/cart", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("cart", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
 
 
 app.get("/register", (req, res) => {
