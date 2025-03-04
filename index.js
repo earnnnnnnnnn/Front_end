@@ -39,7 +39,7 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", async (req, res) => {
     try{
         const cameraname = await axios.get(base_url + '/camera');
-        res.render("head", { cameranamek: cameraname.data });
+        res.render("head", { cameraname: cameraname.data });
 
         // res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
     }catch(err){
