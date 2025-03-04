@@ -1,12 +1,15 @@
 //Description: Node.js HTML client
 //request: npm install express ejs axios body-parser
 
+// const express = require('express');
+// const axios = require('axios');
+// const app = express();
+// var bodyParser = require('body-parser');
+// const path = require("path");
 const express = require('express');
-const axios = require('axios');
+const bcrypt = require('bcrypt');
+const Users = require('./path/to/your/models/User'); // ตรวจสอบให้แน่ใจว่า path ถูกต้อง
 const app = express();
-var bodyParser = require('body-parser');
-const path = require("path");
-
 
 //Base URL for the API
 //const base_url = "https://api.example.com";
@@ -25,11 +28,8 @@ app.use(express.static(__dirname + '/public'));
 
 app.get("/", async (req, res) => {
     try{
-        const cameraname = await axios.get(base_url + '/camera');
-        const brand = await axios.get(base_url + '/camera');
-        const rental_price_per_day = await axios.get(base_url + '/camera');
-        // const response = await axios.get(base_url + '/users');
-        res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data });
+        const response = await axios.get(base_url + '/users');
+        res.render("head", { users: response.data });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
@@ -118,6 +118,12 @@ app.get("/register", (req, res) => {
 });
 
 // const Users = require('../models/User'); // ตรวจสอบว่า path ถูกต้อง
+
+
+// Middleware สำหรับการจัดการข้อมูล JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.post("/users", async (req, res) => {
     try {
         const { username, password, email, phone } = req.body;
@@ -131,7 +137,7 @@ app.post("/users", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // สร้างผู้ใช้ใหม่
-        const newUser   = await Users.create({
+        const newUser  = await Users.create({
             username,
             password: hashedPassword,
             email,
@@ -144,6 +150,12 @@ app.post("/users", async (req, res) => {
         console.error("เกิดข้อผิดพลาดระหว่างการลงทะเบียน:", err);
         res.status(500).send('เกิดข้อผิดพลาดระหว่างการลงทะเบียน');
     }
+});
+
+// เริ่มเซิร์ฟเวอร์
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 
@@ -160,16 +172,7 @@ app.get("/rentalProcess", (req, res) => {
     res.render("rentalProcess");  
 });
 
-app.get("/head", async (req, res) => {
-    try{
-        const response = await axios.get(
-        base_url + '/books/' + req.params.id);
-        res.render("update", { book: response.data });
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
+
 
 // app.get("/update/:id", async (req, res) => {
 //     try{

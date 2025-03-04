@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+  <!-- <p><%=camera[1].cameraimg%></p> -->
     <div class="container">
         <div class="logo">
           <img src="../image/logo1.png" alt="Logo">
@@ -31,108 +32,25 @@
         <a href="#featured-cameras" class="btn">Rent Now</a>
       </div>
     </section>
-  
-    <!-- Featured Cameras -->
+
     <section id="featured-cameras" class="featured-cameras" >
       <div class="container">
         <h2>Featured Cameras</h2>
-        <div class="cameras">
-          <div class="camera">
-            <a href="camera_detail.html?id=1">
-              <img src="../image/sony-zv-1f.jpg" alt="DSLR">
-            </a>
-            <h3>Sony ZV-1F </h3>
-            <p>1 day : 900 bath</p>
-            <button class="button">Add</button>
+        <% for(var i=0; i< camera.length; i++) {%>
+          <div class="cameras">
+              <a href="camera_detail.html?id=<%=i+1%>">
+                <img src="../image/<%=camera[i].cameraimg%>">
+              </a>
+              <h3><%=camera[i].cameraname%></h3>
+              <p><%=camera[i].rental_price_per_day%></p>
+              <button class="button">Add</button>
           </div>
-          <div class="camera">
-            <img src="../image/Sony a7CR.jpg" alt="Mirrorless">
-            <h3>Sony a7CR</h3>
-            <p>1 day : 1,500 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/Sony ZV-1.jpg" alt="Action Camera">
-            <h3>Sony ZV-1</h3>
-            <p>1 day : 500 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/Leica M11 Monochrom.jpg" alt="360° Camera">
-            <h3>Leica M11 Monochrom</h3>
-            <p>1 day : 20,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/Sony ZV-E10 II.jpg" alt="DSLR">
-            <h3>Sony ZV-E10 II</h3>
-            <p>1 day : 1,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/sony-a9-iii.jpg" alt="Mirrorless">
-            <h3>Sony a9 III</h3>
-            <p>1 day : 19,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/panasonic-lumix-g100d_1_.jpg" alt="Action Camera">
-            <h3>Panasonic Lumix G100D</h3>
-            <p>1 day : 900 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/fujifilm-x100.jpg" alt="360° Camera">
-            <h3>Fujifilm X100VI</h3>
-            <p>1 day : 2,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/canon-eos-m6.jpg" alt="Action Camera">
-            <h3>Canon EOS M6 Mark II Kit 15-45 mm Lens</h3>
-            <p>1 day : 1,500 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/fujifilm-x-s10.jpg" alt="360° Camera">
-            <h3>Fujifilm X-S10</h3>
-            <p>1 day : 1,500 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/canon-powershot-v1.png" alt="DSLR">
-            <h3>Canon PowerShot V1</h3>
-            <p>1 day : 2,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/Canon PowerShot V10.png" alt="Mirrorless">
-            <h3>Canon PowerShot V10 Vlog Camera</h3>
-            <p>1 day : 500 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/Fujifilm X-E4.jpg" alt="Action Camera">
-            <h3>Fujifilm X-E4</h3>
-            <p>1 day : 1,200 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/DJI Osmo Action 4.jpg" alt="360° Camera">
-            <h3>DJI Osmo Action 4</h3>
-            <p>1 day : 800 bath</p>
-            <button class="button">Add</button>
-          </div>
-          <div class="camera">
-            <img src="../image/panasonic-lumix.jpg" alt="DSLR">
-            <h3>Panasonic Lumix S5IIX</h3>
-            <p>1 day : 3,000 bath</p>
-            <button class="button">Add</button>
-          </div>
-        </div>
+
+        <% } %>
       </div>
     </section>
-  
+
+
     <!-- Search & Filter Section -->
     <section class="search-filter">
       <div class="container">
