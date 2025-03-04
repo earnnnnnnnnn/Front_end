@@ -23,18 +23,31 @@ app.use(bodyParser.urlencoded({ extended: false}));
 //Serve static files
 app.use(express.static(__dirname + '/public'));
 
+// app.get("/", async (req, res) => {
+//     try{
+//         const camera_id = await axios.get(base_url + '/camera');
+//         const cameraname = await axios.get(base_url + '/camera');
+//         const brand = await axios.get(base_url + '/camera');
+//         const rental_price_per_day = await axios.get(base_url + '/camera'); 
+//         res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
+//     }catch(err){
+//         console.error(err);
+//         res.status(500).send('Error');
+//     }
+// });
+
 app.get("/", async (req, res) => {
     try{
-        const camera_id = await axios.get(base_url + '/camera');
         const cameraname = await axios.get(base_url + '/camera');
-        const brand = await axios.get(base_url + '/camera');
-        const rental_price_per_day = await axios.get(base_url + '/camera');
-        res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
+        res.render("head", { cameranamek: cameraname.data });
+
+        // res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
     }
 });
+
 app.get("/detail", async (req, res) => {
     try{
         const camera = await axios.get(base_url + '/camera');
