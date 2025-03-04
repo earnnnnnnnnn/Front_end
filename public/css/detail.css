@@ -1,32 +1,60 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-.container {
-    width: 80%;
-    margin: auto;
-}
-
-.product-image {
-    max-width: 100%;
-    height: auto;
-}
-
-.price {
-    color: red;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.details {
+/* ส่วนของรายละเอียดสินค้า */
+.product-details {
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
 }
 
-.section {
-    margin-top: 40px;
+.product-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+}
+
+.product-info {
+    max-width: 600px;
+}
+
+.product-info h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.product-info p {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+}
+
+.product-info h4 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.product-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.product-info ul li {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.product-info .btn {
+    padding: 0.8rem 1.5rem;
+    background-color: #1a73e8;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.product-info .btn:hover {
+    background-color: #1558b0;
 }
