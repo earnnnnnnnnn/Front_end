@@ -52,15 +52,16 @@ app.get("/register", (req, res) => {
     res.render("register");  
 });
 
-app.post("/register", async (req, res) => {
+app.post("/login", async (req, res) => {
     try{
         const username = await axios.get(base_url + '/User');
         const password = await axios.get(base_url + '/User');
         const email = await axios.get(base_url + '/User');
         const phone_number = await axios.get(base_url + '/User');
 
-        const data = {title: req.body.title, author: req.body.author };
-
+        // const data = {title: req.body.title, author: req.body.author };
+        res.render("register", { username: username.data,password: password.data,email: email.data,phone_number: phone_number.data });
+        console.log (cameraId)
         await axios.put(base_url + '/User/' + req.params.id, data);
         res.redirect("/login");
     }catch(err){
