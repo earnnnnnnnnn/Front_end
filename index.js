@@ -23,25 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false}));
 //Serve static files
 app.use(express.static(__dirname + '/public'));
 
-// app.get("/", async (req, res) => {
-//     try{
-//         const camera_id = await axios.get(base_url + '/camera');
-//         const cameraname = await axios.get(base_url + '/camera');
-//         const brand = await axios.get(base_url + '/camera');
-//         const rental_price_per_day = await axios.get(base_url + '/camera'); 
-//         res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
 app.get("/", async (req, res) => {
     try{
         const cameraname = await axios.get(base_url + '/camera');
         res.render("head", { cameraname: cameraname.data });
-
-        // res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data,camera_id: camera_id.data });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
@@ -76,23 +61,15 @@ app.get("/register", (req, res) => {
     res.render("register");  
 });
 
-app.post("/login", async (req, res) => {
-    try{
-        const username = await axios.get(base_url + '/User');
-        const password = await axios.get(base_url + '/User');
-        const email = await axios.get(base_url + '/User');
-        const phone_number = await axios.get(base_url + '/User');
-
-        // const data = {title: req.body.title, author: req.body.author };
-        res.render("register", { username: username.data,password: password.data,email: email.data,phone_number: phone_number.data });
-        console.log (cameraId)
-        await axios.put(base_url + '/User/' + req.params.id, data);
-        res.redirect("/login");
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
+// app.get("/login", async (req, res) => {
+//     try{
+//         const login = await axios.get(base_url + '/user');
+//         res.render("login", { login: login.data});
+//     }catch(err){
+//         console.error(err);
+//         res.status(500).send('Error');
+//     }
+// });
 
 
 app.get("/login", (req, res) => {
