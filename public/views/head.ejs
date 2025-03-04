@@ -46,7 +46,7 @@
               </a>
               <h3><%=camera[i].cameraname%></h3>
               <p><%=camera[i].rental_price_per_day%> bath</p>
-              <form action="/detail" method="GET">
+              <form action="/cart" method="GET">
                 <input type="hidden" name="camera_id" value="<%=camera[i].camera_id %>">
                 <button class="button-submit" type="submit">Add</button>
               </form>
