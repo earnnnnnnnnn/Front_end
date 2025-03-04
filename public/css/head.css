@@ -42,7 +42,7 @@
     margin: 2px 1px;
     cursor: pointer;
     border-radius: 8px;
-}
+  }
 
 
   /* Header */
@@ -131,41 +131,55 @@
     padding: 40px 0;
     background: #fafafa;
   }
-  .featured-cameras h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2rem;
+  .text-camera{
+    text-align: center; 
+    width: 100%; 
+    margin-bottom: 20px; 
+    font-size: 24px; 
   }
-  .cameras {
+  .camera {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(5, 1fr); /* แสดง 5 คอลัมน์ต่อแถว */
+    gap: 20px; /* ระยะห่างระหว่างกล่อง */
+    justify-content: center; /* จัดให้อยู่ตรงกลาง */
     padding: 0 20px;
   }
-  .cameras .camera {
-    display: block;
+  .cameras {
     background: #fff;
     padding: 15px;
     border: 2px solid transparent;
-    border-radius: 4px;
+    border-radius: 8px;
     text-align: center;
     transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
-  .cameras .camera:hover {
-    border: 2px solid #fff;
-    box-shadow: 0px .3px 12px #333; 
+  .cameras:hover {
+    border: 2px solid #333;
+    box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2); 
   }
-  .camera h3 {
+  .cameras h3 {
     margin: 10px 0;
   }
-  .camera p {
+  .cameras p {
     color: #ff6f61;
     font-weight: bold;
   }
-  .camera img {
+  .cameras img {
     max-width: 100%;
     height: auto;
     display: block;
+  }
+  .button-add {
+    background-color: #ff6f61; /* Green */
+    border: none;
+    color: white;
+    padding: 3px 9px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 1px;
+    cursor: pointer;
+    border-radius: 8px;
   }
 
   /* Search & Filter Section */
