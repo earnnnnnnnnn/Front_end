@@ -28,13 +28,35 @@ app.get("/", async (req, res) => {
         const cameraname = await axios.get(base_url + '/camera');
         const brand = await axios.get(base_url + '/camera');
         const rental_price_per_day = await axios.get(base_url + '/camera');
-        // const response = await axios.get(base_url + '/users');
         res.render("head", { camera: cameraname.data,brand: brand.data,rental_price_per_day: rental_price_per_day.data });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
     }
 });
+
+
+app.get("/register", (req, res) => {
+    res.render("register");  
+});
+
+app.post("/register", async (req, res) => {
+    try{
+        const username = await axios.get(base_url + '/User');
+        const password = await axios.get(base_url + '/User');
+        const email = await axios.get(base_url + '/User');
+        const phone_number = await axios.get(base_url + '/User');
+
+        const data = {title: req.body.title, author: req.body.author };
+
+        await axios.put(base_url + '/User/' + req.params.id, data);
+        res.redirect("/login");
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
+
 
 app.get("/login", (req, res) => {
     res.render("login");  
@@ -112,38 +134,35 @@ app.get("/create", (req, res) => {
 //     }
 // });
 
-app.get("/register", (req, res) => {
-    res.render("register");  
-});
 
-// const Users = require('../models/User'); // ตรวจสอบว่า path ถูกต้อง
-app.post("/users", async (req, res) => {
-    try {
-        const { username, password, email, phone } = req.body;
+// // const Users = require('../models/User'); // ตรวจสอบว่า path ถูกต้อง
+// app.post("/users", async (req, res) => {
+//     try {
+//         const { username, password, email, phone } = req.body;
 
-        // ตรวจสอบข้อมูลที่ได้รับ
-        if (!username || !password || !email || !phone) {
-            return res.status(400).send('กรุณากรอกข้อมูลให้ครบถ้วน');
-        }
+//         // ตรวจสอบข้อมูลที่ได้รับ
+//         if (!username || !password || !email || !phone) {
+//             return res.status(400).send('กรุณากรอกข้อมูลให้ครบถ้วน');
+//         }
 
-        // แฮชรหัสผ่านก่อนที่จะบันทึก
-        const hashedPassword = await bcrypt.hash(password, 10);
+//         // แฮชรหัสผ่านก่อนที่จะบันทึก
+//         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // สร้างผู้ใช้ใหม่
-        const newUser   = await Users.create({
-            username,
-            password: hashedPassword,
-            email,
-            phone_number: phone
-        });
+//         // สร้างผู้ใช้ใหม่
+//         const newUser   = await Users.create({
+//             username,
+//             password: hashedPassword,
+//             email,
+//             phone_number: phone
+//         });
 
-        // เปลี่ยนไปที่หน้าเข้าสู่ระบบหลังจากลงทะเบียนสำเร็จ
-        res.redirect("/login");
-    } catch (err) {
-        console.error("เกิดข้อผิดพลาดระหว่างการลงทะเบียน:", err);
-        res.status(500).send('เกิดข้อผิดพลาดระหว่างการลงทะเบียน');
-    }
-});
+//         // เปลี่ยนไปที่หน้าเข้าสู่ระบบหลังจากลงทะเบียนสำเร็จ
+//         res.redirect("/login");
+//     } catch (err) {
+//         console.error("เกิดข้อผิดพลาดระหว่างการลงทะเบียน:", err);
+//         res.status(500).send('เกิดข้อผิดพลาดระหว่างการลงทะเบียน');
+//     }
+// });
 
 
 // app.get("/register", (req, res) => {
