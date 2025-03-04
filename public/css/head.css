@@ -169,6 +169,7 @@
     display: block;
   }
   .button-add {
+    margin-top: 70px;
     background-color: #ff6f61; /* Green */
     border: none;
     color: white;
