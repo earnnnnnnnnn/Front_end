@@ -34,7 +34,7 @@
             event.preventDefault();  // หยุดการส่งฟอร์มแบบปกติ
             const email = document.querySelector('[name="email"]').value;
             const password = document.querySelector('[name="password"]').value;
-
+    
             fetch('/login', {
                 method: 'POST',
                 headers: {
@@ -42,11 +42,11 @@
                 },
                 body: JSON.stringify({ email, password })  // ส่งข้อมูล login ไป
             })
-            .then(response => response.text())  // รับข้อมูลเป็น text จาก backend
+            .then(response => response.json())  // รับข้อมูลเป็น JSON จาก backend
             .then(data => {
-                if (data === "Invalid email or password.") {
-                    alert(data);  // ถ้าเป็นข้อความผิดพลาดจาก backend ให้แสดงข้อความ
-                } else if (data === "Login successful") {
+                if (data.errorMessage) {
+                    alert(data.errorMessage);  // ถ้ามีข้อผิดพลาดจาก backend ให้แสดงข้อความ
+                } else if (data.success) {
                     // ถ้าล็อกอินสำเร็จ ให้เปลี่ยนเส้นทางไปหน้าแรก
                     window.location.href = '/';  // ไปที่หน้าแรก
                 }
@@ -54,5 +54,6 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
+    
 </body>
 </html>

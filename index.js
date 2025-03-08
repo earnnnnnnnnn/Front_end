@@ -34,31 +34,6 @@ app.get("/", async (req, res) => {
     }
 });
 
-app.get("/detail", async (req, res) => {
-    try{
-        const camera = await axios.get(base_url + '/camera');
-        const cameraId = req.query;
-        console.log (cameraId)
-        res.render("detail", {});
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
-app.get("/cart", async (req, res) => {
-    try{
-        const camera = await axios.get(base_url + '/camera');
-        const cameraId = req.query;
-        console.log (cameraId)
-        res.render("cart", {});
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
-
-
-
 
 // หน้า Login
 app.get("/login", (req, res) => {
@@ -134,6 +109,29 @@ app.post("/signup", async (req, res) => {
 
 
 
+
+app.get("/detail", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("detail", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
+app.get("/cart", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("cart", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
 
 
 
