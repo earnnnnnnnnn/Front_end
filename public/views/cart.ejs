@@ -14,16 +14,19 @@
             <!-- แสดงจำนวนสินค้าที่มีในตะกร้า -->
             <p class="item-count"><%= cartItems ? cartItems.length : 0 %> Items</p> 
             
-            <!-- รายการสินค้าที่อยู่ในตะกร้า -->
             <div class="cart-items-list">
                 <% if (cartItems && cartItems.length > 0) { %>
                     <% cartItems.forEach(function(item) { %>
                         <div class="cart-item">
-                            <img src="<%= item.image %>" alt="<%= item.name %>" class="item-image">
                             <div class="item-details">
-                                <h3><%= item.name %></h3>
-                                <p>Price: $<%= item.price %></p>
-                                <p>Quantity: <%= item.quantity %></p>
+                                <% const camera = cameras.find(camera => camera.camera_id == item.camera_id); %>
+                                <img src="../image/<%= camera.cameraimg %>" alt="">
+                                <% if (camera) { %>
+                                    <h3><%= camera.cameraname %></h3>
+                                    <p>Price: $<%= item.rental_price_per_day %></p>
+                                <% } else { %>
+                                    <h3>Unknown Camera</h3>
+                                <% } %>
                             </div>
                         </div>
                     <% }); %>
@@ -31,28 +34,11 @@
                     <p>Your cart is empty.</p>
                 <% } %>
             </div>
-
+            
             <a href="/" class="back">← Back to shop</a>
         </div>
         
-        <!-- สรุปยอดรวม -->
-        <div class="summary">
-            <h2>Summary</h2>
-            <div class="summary-item">
-                <span>ITEMS</span>
-                <span id="total-items"><%= cartItems ? cartItems.length : 0 %></span> 
-            </div>
-            <div class="summary-item">
-                <span>SHIPPING</span>
-                <span>FREE</span> 
-            </div>
-            <div class="summary-item">
-                <span>TOTAL PRICE</span>
-                <span id="total-price">$<%= totalPrice %></span> 
-            </div>
-
-            <button class="checkout" onclick="checkout()">CHECKOUT</button>
-        </div>
+        
     </div>
 
     <script>

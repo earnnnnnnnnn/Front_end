@@ -55,17 +55,17 @@ app.get("/detail", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-app.get("/cart", async (req, res) => {
-    try{
-        const camera = await axios.get(base_url + '/camera');
-        const cameraId = req.query;
-        console.log (cameraId)
-        res.render("cart", {});
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
+// app.get("/cart", async (req, res) => {
+//     try{
+//         const camera = await axios.get(base_url + '/camera');
+//         const cameraId = req.query;
+//         console.log (cameraId)
+//         res.render("cart", {});
+//     }catch(err){
+//         console.error(err);
+//         res.status(500).send('Error');
+//     }
+// });
 
 
 
@@ -270,14 +270,12 @@ app.get('/detail', (req, res) => {
 // });
 app.get("/cart", async (req, res) => {
     const loginSession = req.session.USER;
-
-    const cameras = await axios.get(base_url + '/camera')
-    const findCamera = cameras.data.find(camera => camera.users_id == loginSession.userId)
-    console.log(findCamera);
     
-
-
-    res.render("cart");  
+    const cameras = await axios.get(base_url + '/camera')
+    const rentals = await axios.get(base_url + '/rental')
+    const cartItems = rentals.data.filter(rental => rental.users_id == loginSession.userId)
+    
+    res.render("cart", {cameras: cameras.data, cartItems: cartItems});  
 });
 app.get("/head", (req, res) => {
     res.render("head");  
