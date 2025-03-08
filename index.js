@@ -6,7 +6,7 @@ const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
-const { check } = require('prettier');
+// const { check } = require('prettier');
 const session = require("express-session");
 const { log } = require('console');
 
@@ -326,6 +326,7 @@ app.get("/head", async (req, res) => {
 //         res.status(500).send('Error');
 //     }
 // });
+
 
 app.listen(5500, () => {
     console.log('Server started on http://localhost:5500');
