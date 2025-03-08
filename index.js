@@ -6,7 +6,7 @@ const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
-const { check } = require('prettier');
+// const { check } = require('prettier');
 
 
 //Base URL for the API
@@ -56,6 +56,15 @@ app.get("/cart", async (req, res) => {
         res.status(500).send('Error');
     }
 });
+
+const session = require('express-session');
+
+app.use(session({
+    secret: 'your-secret-key',  // กำหนดคีย์ลับที่คุณต้องการ
+    resave: false,               // ไม่บันทึก session ที่ไม่มีการเปลี่ยนแปลง
+    saveUninitialized: true,     // เก็บ session ใหม่ที่ยังไม่ถูกตั้งค่า
+    cookie: { secure: false }    // ถ้าไม่ใช้ HTTPS ให้ใช้ `false`
+}));
 
 app.get("/login", (req, res) => {
     res.render("login");
