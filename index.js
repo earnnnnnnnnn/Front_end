@@ -34,8 +34,34 @@ app.get("/", async (req, res) => {
     }
 });
 
+app.get("/detail", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("detail", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
+app.get("/cart", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("cart", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
 
+
+<<<<<<< HEAD
+=======
 // หน้า Login
+>>>>>>> f5b2d67588268385a45e263ca75fda3218fd2f07
 app.get("/login", (req, res) => {
     res.render("login");
 });
