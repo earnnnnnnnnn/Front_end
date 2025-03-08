@@ -60,25 +60,37 @@ app.get("/cart", async (req, res) => {
 
 
 
+// หน้า Login
 app.get("/login", (req, res) => {
-    res.render("login");  
+    res.render("login");
 });
 
-app.get("/users/:id", async (req, res) => {
-    try{
-        const response = await axios.get(base_url + '/users/' + req.params.id);
-        res.render("login", { book: response.data });
-    }catch(err){
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
+        const response = await axios.get(base_url + '/users');
+        const users = response.data;
+
+        // ค้นหาผู้ใช้จาก email ที่กรอกมา
+        const user = users.find(user => user.email === email);
+
+        // ถ้าไม่มีผู้ใช้หรือรหัสผ่านไม่ตรง
+        if (!user || password !== user.password) {
+            return res.render("login", { errorMessage: "Invalid email or password. Please try again." });
+        }
+
+        // ถ้ารหัสผ่านถูกต้อง จะเก็บข้อมูลผู้ใช้ใน session
+        req.session.user = user;
+        res.redirect("/");  // ทำการ redirect ไปยังหน้าแรก
+    } catch (err) {
         console.error(err);
         res.status(500).send('Error');
     }
 });
 
 
-
-// app.get("/register", (req, res) => {
-//     res.render("register");  
-// });
 
 // หน้า Register
 app.get("/register", (req, res) => {

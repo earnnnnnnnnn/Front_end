@@ -9,23 +9,50 @@
 <body>
     <div class="center">
         <h1>Login</h1>
-        <form metod="post">
-        <div class="txt_field">
-            <input type="text" required>
-            <span></span>
-            <label>Email</label>
-        </div>
-        <div class="txt_field">
-            <input type="password" required>
-            <span></span>
-            <label>Password</label>
-        </div>
-        <div class="pass">Forgot Password?</div>
-        <input type="submit" value="Login">
-        <div class="register_link">
-            Not a member? <a href="/register">Register</a>
-        </div>
-    </form>
+        <form id="loginForm" method="post">
+            <div class="txt_field">
+                <input type="text" name="email" required>
+                <span></span>
+                <label>Email</label>
+            </div>
+            <div class="txt_field">
+                <input type="password" name="password" required>
+                <span></span>
+                <label>Password</label>
+            </div>
+            <div class="pass">Forgot Password?</div>
+            <input type="submit" value="Login">
+            <div class="register_link">
+                Not a member? <a href="/register">Register</a>
+            </div>
+        </form>
     </div>
+
+    <script>
+        // เมื่อฟอร์มถูกส่ง
+        document.getElementById('loginForm').onsubmit = function(event) {
+            event.preventDefault();  // หยุดการส่งฟอร์มแบบปกติ
+            const email = document.querySelector('[name="email"]').value;
+            const password = document.querySelector('[name="password"]').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })  // ส่งข้อมูล login ไป
+            })
+            .then(response => response.text())  // รับข้อมูลเป็น text จาก backend
+            .then(data => {
+                if (data === "Invalid email or password.") {
+                    alert(data);  // ถ้าเป็นข้อความผิดพลาดจาก backend ให้แสดงข้อความ
+                } else if (data === "Login successful") {
+                    // ถ้าล็อกอินสำเร็จ ให้เปลี่ยนเส้นทางไปหน้าแรก
+                    window.location.href = '/';  // ไปที่หน้าแรก
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
