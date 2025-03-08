@@ -7,6 +7,15 @@ const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
 const { check } = require('prettier');
+const session = require("express-session");
+const { log } = require('console');
+
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 
 //Base URL for the API
@@ -14,10 +23,6 @@ const { check } = require('prettier');
 const base_url = "http://localhost:3000";
 app.set("views", path.join(__dirname, "/public/views"));
 app.set("view engine", "ejs");
-
-//Set the template engine
-app.set("views" , path.join(__dirname, "/public/views"));
-app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 
@@ -26,8 +31,13 @@ app.use(express.static(__dirname + '/public'));
 
 app.get("/", async (req, res) => {
     try{
+        const loginSession = req.session.USER;
+
+        console.log(loginSession);
+        
+
         const cameraname = await axios.get(base_url + '/camera');
-        res.render("head", { cameraname: cameraname.data });
+        res.render("head", { cameraname: cameraname.data, loginSession });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
@@ -78,16 +88,16 @@ app.post("/login", async (req, res) => {
         if (!user || password !== user.password) {
             return res.render("login", { errorMessage: "Invalid email or password. Please try again." });
         }
-
-        // ถ้ารหัสผ่านถูกต้อง จะเก็บข้อมูลผู้ใช้ใน session
-        req.session.user = user;
-        res.redirect("/");  // ทำการ redirect ไปยังหน้าแรก
+        
+        req.session.USER = { userId: user.users_id };
+        
+        if (req.session.USER)
+            res.redirect("/");  // ทำการ redirect ไปยังหน้าแรก
     } catch (err) {
         console.error(err);
         res.status(500).send('Error');
     }
 });
-
 
 
 // หน้า Register
@@ -258,7 +268,15 @@ app.get('/detail', (req, res) => {
 // app.get("/register", (req, res) => {
 //     res.render("register");  
 // });
-app.get("/cart", (req, res) => {
+app.get("/cart", async (req, res) => {
+    const loginSession = req.session.USER;
+
+    const cameras = await axios.get(base_url + '/camera')
+    const findCamera = cameras.data.find(camera => camera.users_id == loginSession.userId)
+    console.log(findCamera);
+    
+
+
     res.render("cart");  
 });
 app.get("/head", (req, res) => {
@@ -311,6 +329,6 @@ app.get("/head", async (req, res) => {
 //     }
 // });
 
-app.listen(5000, () => {
-    console.log('Server started on http://localhost:5000');
+app.listen(5500, () => {
+    console.log('Server started on http://localhost:5500');
     });

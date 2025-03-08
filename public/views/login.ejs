@@ -9,7 +9,7 @@
 <body>
     <div class="center">
         <h1>Login</h1>
-        <form id="loginForm" method="post">
+        <form id="loginForm" action="/login" method="post">
             <div class="txt_field">
                 <input type="text" name="email" required>
                 <span></span>
@@ -21,14 +21,14 @@
                 <label>Password</label>
             </div>
             <div class="pass">Forgot Password?</div>
-            <input type="submit" value="Login">
+            <button type="submit">Login</button>
             <div class="register_link">
                 Not a member? <a href="/register">Register</a>
             </div>
         </form>
     </div>
 
-    <script>
+    <!-- <script>
         // เมื่อฟอร์มถูกส่ง
         document.getElementById('loginForm').onsubmit = function(event) {
             event.preventDefault();  // หยุดการส่งฟอร์มแบบปกติ
@@ -53,7 +53,7 @@
             })
             .catch(error => console.error('Error:', error));
         }
-    </script>
+    </script> -->
     
 </body>
 </html>
