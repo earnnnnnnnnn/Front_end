@@ -1,113 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/head.css">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container">
-        <div class="logo">
-          <img src="../image/logo1.png" alt="Logo">
-        </div>
-        <nav>
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#featured-cameras">Cameras</a></li>
-            <li><a href="/rentalProcess">Rental Process</a></li>
-            <li><a href="/cart">Cart</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="/login">Login</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-content">
-        <h1>Rent the Perfect Camera for Your Adventure</h1>
-        <a href="#featured-cameras" class="btn">Rent Now</a>
-      </div>
-    </section>
-
-    <section id="featured-cameras" class="featured-cameras" >
-      <div class="text-camera">
-        <h2>Featured Cameras</h2>
-      </div>
-      
-      <div class="camera">
-        <% for(var i=0; i< cameraname.length; i++) {%>
-          <div class="cameras">
-              <a href="">
-                <img src="../image/<%=cameraname[i].cameraimg%>">
-              </a>
-              <h3><%=cameraname[i].cameraname%></h3>
-              <p><%=cameraname[i].rental_price_per_day%> bath</p>
-              
-              <form action="/cart" method="GET">
-                <input type="hidden" name="camera_id" value="<%=cameraname[i].camera_id %>">
-                <input type="hidden" name="cameraname" value="<%=cameraname[i].camername %>">
-                <input type="hidden" name="rental_price_per_day" value="<%=cameraname[i].rental_price_per_day %>">
-                <button class="button-submit" type="submit">Add</button>
-              </form>
-              <form action="/detail" method="GET">
-                <input type="hidden" name="camera_id" value="<%=cameraname[i].camera_id %>">
-                <button class="button-submit" type="submit">Details</button>
-              </form>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="../css/head.css">
+      <title>Document</title>
+  </head>
+  <body>
+      <div class="container">
+          <div class="logo">
+            <img src="../image/logo1.png" alt="Logo">
           </div>
-        <% } %>
-      </div>
-    </section>
-
-
-    <section class="search-filter">
-      <div class="container">
-        <h2>ค้นหากล้องที่ต้องการ</h2>
-        <form action="#" method="get">
-          <input type="text" placeholder="ค้นหากล้อง...">
-          <!-- <select name="type">
-            <option value="">ประเภท</option>
-            <option value="dslr">DSLR</option>
-            <option value="mirrorless">Mirrorless</option>
-            <option value="action">Action</option>
-            <option value="360">360° Camera</option>
-          </select>
-          <select name="price">
-            <option value="">ราคา</option>
-            <option value="low">ต่ำ</option>
-            <option value="medium">กลาง</option>
-            <option value="high">สูง</option>
-          </select> -->
-          <button type="submit">ค้นหา</button>
-        </form>
-      </div>
-    </section>
-  
-    <!-- Testimonials -->
-    <section class="testimonials">
-      <div class="container">
-        <h2>About</h2>
-        <div class="testimonial">
-          <p>Camera Rent was founded out of a passion for the world of photography and the desire to make high-quality photography equipment accessible to everyone without requiring a large investment. Our store was established in [year of establishment] by a group of experienced photographers and videographers who wanted to provide both 
-            amateurs and professionals with the opportunity to rent equipment at affordable prices.</p>
+          <nav>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#featured-cameras">Cameras</a></li>
+              <li><a href="/rentalProcess">Rental Process</a></li>
+              <li><a href="/cart">Cart (<span id="cart-count">0</span>)</a></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
+              <li><a href="#contact">Contact</a></li>
+              <li><a href="/login">Login</a></li>
+            </ul>
+          </nav>
         </div>
-      </div>
-    </section>
-  
-    <!-- Footer -->
-    <footer id="contact">
-      <div class="container footer-content">
-        <ul>
-          <li><a href="#">Facebook</a> : CameraRent</li><br>
-          <li><a href="#">Line</a> : @CameraRent21</li>
-          <li><a href="#">Instagram</a> : Camera_21</li>
-          <li><a href="#">Terms &amp; : Conditions</a></li>
-        </ul>
 
-        <p>© 2025 Camera Rental. All rights reserved.</p>
-      </div>
-    </footer>
-</body>
-</html>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Rent the Perfect Camera for Your Adventure</h1>
+          <a href="#featured-cameras" class="btn">Rent Now</a>
+        </div>
+      </section>
+
+      <section id="featured-cameras" class="featured-cameras">
+        <div class="text-camera">
+          <h2>Featured Cameras</h2>
+        </div>
+        
+        <div class="camera">
+          <% for(var i=0; i< cameraname.length; i++) { %>
+            <div class="cameras">
+                <a href="">
+                  <img src="../image/<%= cameraname[i].cameraimg %>" alt="<%= cameraname[i].cameraname %>">
+                </a>
+                <h3><%= cameraname[i].cameraname %></h3>
+                <p><%= cameraname[i].rental_price_per_day %> bath</p>
+                
+                <form action="/cart" method="GET">
+                  <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
+                  <input type="hidden" name="cameraname" value="<%= cameraname[i].cameraname %>">
+                  <input type="hidden" name="rental_price_per_day" value="<%= cameraname[i].rental_price_per_day %>">
+                  <button class="button-submit" type="submit">Add</button>
+                </form>
+                <form action="/detail" method="GET">
+                  <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
+                  <button class="button-submit" type="submit">Details</button>
+                </form>
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="search-filter">
+        <div class="container">
+          <h2>ค้นหากล้องที่ต้องการ</h2>
+          <form action="#" method="get">
+            <input type="text" placeholder="ค้นหากล้อง...">
+            <button type="submit">ค้นหา</button>
+          </form>
+        </div>
+      </section>
+    
+      <!-- Testimonials -->
+      <section class="testimonials">
+        <div class="container">
+          <h2>About</h2>
+          <div class="testimonial">
+            <p>Camera Rent was founded out of a passion for the world of photography and the desire to make high-quality photography equipment accessible to everyone without requiring a large investment. Our store was established in [year of establishment] by a group of experienced photographers and videographers who wanted to provide both amateurs and professionals with the opportunity to rent equipment at affordable prices.</p>
+          </div>
+        </div>
+      </section>
+    
+      <!-- Footer -->
+      <footer id="contact">
+        <div class="container footer-content">
+          <ul>
+            <li><a href="#">Facebook</a> : CameraRent</li><br>
+            <li><a href="#">Line</a> : @CameraRent21</li>
+            <li><a href="#">Instagram</a> : Camera_21</li>
+            <li><a href="#">Terms &amp; Conditions</a></li>
+          </ul>
+          <p>© 2025 Camera Rental. All rights reserved.</p>
+        </div>
+      </footer>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        
+          let cartCount = localStorage.getItem("cartCount") || 0;
+          document.getElementById("cart-count").textContent = cartCount;
+
+        
+          document.querySelectorAll(".button-submit").forEach(button => {
+            button.addEventListener("click", function(event) {
+              event.preventDefault();
+              cartCount++; 
+              localStorage.setItem("cartCount", cartCount); 
+              document.getElementById("cart-count").textContent = cartCount; 
+            });
+          });
+        });
+      </script>
+  </body>
+  </html>
