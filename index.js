@@ -6,6 +6,7 @@ const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
+const { check } = require('prettier');
 
 
 //Base URL for the API
@@ -57,19 +58,6 @@ app.get("/cart", async (req, res) => {
 });
 
 
-app.get("/register", (req, res) => {
-    res.render("register");  
-});
-
-// app.get("/login", async (req, res) => {
-//     try{
-//         const login = await axios.get(base_url + '/user');
-//         res.render("login", { login: login.data});
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
 
 
 app.get("/login", (req, res) => {
@@ -85,15 +73,43 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-app.get("/users/:id", async (req, res) => {
+
+
+
+// app.get("/register", (req, res) => {
+//     res.render("register");  
+// });
+
+app.get("/register", async (req, res) => {
     try{
-        const response = await axios.get(base_url + '/users/' + req.params.id);
-        res.render("register", { book: response.data });
+        res.render("register");
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
     }
 });
+
+
+app.post("/signup", async (req, res) => {
+    try {
+        const { username, password, email, phone } = req.body;
+        
+        // ตรวจสอบข้อมูลต่างๆ ก่อนจะบันทึก
+        const newUser = await User.create({ username, password, email, phone });
+        res.redirect("/login");
+    } catch (err) {
+        console.error(err);
+        if (err.name === 'SequelizeValidationError') {
+            return res.status(400).send({ errors: err.errors });
+        }
+        res.status(500).send("Internal Server Error");
+    }
+});
+z
+หหห
+
+
+
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
