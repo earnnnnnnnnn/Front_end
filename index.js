@@ -6,7 +6,7 @@ const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
-const { check } = require('prettier');
+// const { check } = require('prettier');
 
 
 //Base URL for the API
@@ -58,10 +58,6 @@ app.get("/cart", async (req, res) => {
 });
 
 
-<<<<<<< HEAD
-=======
-// หน้า Login
->>>>>>> f5b2d67588268385a45e263ca75fda3218fd2f07
 app.get("/login", (req, res) => {
     res.render("login");
 });
