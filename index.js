@@ -80,33 +80,49 @@ app.get("/users/:id", async (req, res) => {
 //     res.render("register");  
 // });
 
-app.get("/register", async (req, res) => {
-    try{
-        res.render("register");
-    }catch(err){
+// หน้า Register
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+
+// ลงทะเบียน
+app.post("/signup", async (req, res) => {
+    const { username, email, password, phone } = req.body;
+
+    // ตรวจสอบว่า email ซ้ำในฐานข้อมูลหรือไม่
+    try {
+        const response = await axios.get(base_url + '/users');
+        const users = response.data;
+
+        // ถ้า email ซ้ำ
+        if (users.some(user => user.email === email)) {
+            return res.status(400).send("Email already exists.");
+        }
+
+        // ตรวจสอบรหัสผ่านให้มีความยาว 8 ตัวและเป็นตัวเลข
+        if (password.length !== 8 || isNaN(password)) {
+            return res.status(400).send("Password must be 8 digits and numeric.");
+        }
+
+        // หากไม่ใช้ bcrypt ก็ไม่ต้องทำการเข้ารหัสรหัสผ่าน
+        // แค่ส่งข้อมูลรหัสผ่านตรงๆ ไปยัง backend
+        await axios.post(base_url + '/users', {
+            username,
+            email,
+            password, // ส่งรหัสผ่านตรง ๆ โดยไม่เข้ารหัส
+            phone_number: phone
+        });
+
+        res.redirect("/login");
+    } catch (err) {
         console.error(err);
         res.status(500).send('Error');
     }
 });
 
 
-app.post("/signup", async (req, res) => {
-    try {
-        const { username, password, email, phone } = req.body;
-        
-        // ตรวจสอบข้อมูลต่างๆ ก่อนจะบันทึก
-        const newUser = await User.create({ username, password, email, phone });
-        res.redirect("/login");
-    } catch (err) {
-        console.error(err);
-        if (err.name === 'SequelizeValidationError') {
-            return res.status(400).send({ errors: err.errors });
-        }
-        res.status(500).send("Internal Server Error");
-    }
-});
-z
-หหห
+
+
 
 
 
