@@ -6,7 +6,7 @@ const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
-const { check } = require('prettier');
+// const { check } = require('prettier');
 const session = require("express-session");
 const { log } = require('console');
 
@@ -328,6 +328,7 @@ app.get("/head", async (req, res) => {
 // });
 
 
+<<<<<<< HEAD
 const { execSync } = require('child_process');
 
 const clearPort = (port) => {
@@ -357,3 +358,8 @@ const server = app.listen(host_port, () => {
     console.log(`\x1b[37mHost has started!\x1b[0m`);
     console.log(`\x1b[45mWebpage running on http://localhost:5000\x1b[0m`);
 });
+=======
+app.listen(5500, () => {
+    console.log('Server started on http://localhost:5500');
+    });
+>>>>>>> 5f5170715dc9a799394991ea95a5863da4eaa10a
