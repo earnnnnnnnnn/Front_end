@@ -63,30 +63,33 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
-        const response = await axios.get(base_url + '/users');
-        const users = response.data;
+    // ตรวจสอบอีเมลในฐานข้อมูล
+    Users.findOne({ where: { email: email } })
+        .then(user => {
+            if (!user) {
+                // ถ้าไม่พบอีเมลในฐานข้อมูล
+                return res.json({ errorMessage: "Email not registered." });
+            }
 
-        // ค้นหาผู้ใช้จาก email ที่กรอกมา
-        const user = users.find(user => user.email === email);
+            // ตรวจสอบรหัสผ่าน
+            if (user.password !== password) {
+                // ถ้ารหัสผ่านไม่ตรง
+                return res.json({ errorMessage: "Incorrect password." });
+            }
 
-        // ถ้าไม่มีผู้ใช้หรือรหัสผ่านไม่ตรง
-        if (!user || password !== user.password) {
-            return res.render("login", { errorMessage: "Invalid email or password. Please try again." });
-        }
-
-        // ถ้ารหัสผ่านถูกต้อง จะเก็บข้อมูลผู้ใช้ใน session
-        req.session.user = user;
-        res.redirect("/");  // ทำการ redirect ไปยังหน้าแรก
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error');
-    }
+            // ถ้ารหัสผ่านและอีเมลถูกต้อง
+            req.session.user = user;
+            return res.json({ success: true }); // เปลี่ยนเส้นทางไปหน้าแรก
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error occurred while processing login.');
+        });
 });
+
 
 
 
