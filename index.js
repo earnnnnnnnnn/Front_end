@@ -235,14 +235,68 @@ app.post("/updateuser", async (req, res) => {
 
 
 
-// เส้นทาง GET สำหรับดูข้อมูลใน cart
+
+
+//นัทสอน
+// app.get("/cart", async (req, res) => {
+//     try {
+//         // ดึงข้อมูลจาก Cart ในฐานข้อมูล
+//         const UID = req.session.USER;
+//         const cart = await axios.get(base_url + '/rental');
+//         const cartItems = cart.data.find(user =>  user.id === UID.userId);
+
+//         const camera = await axios.get(base_url + '/camera');
+
+//         console.log(cartItems);
+//         console.log(camera);
+//         // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลและ API ไปแสดงใน view
+//         res.render("cart", { cartItems: cartItems.data, camera: camera.data });
+
+//     } catch (err) {
+//         console.error('Error fetching cart data:', err);
+//         // ส่งข้อความ error ไปยัง Frontend
+//         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
+//     }
+// });
+
+
 app.get("/cart", async (req, res) => {
     try {
-        // ดึงข้อมูลจาก Cart ในฐานข้อมูล
-        const cartItems = await Cart.findAll(); // สมมติว่า `Cart` เป็นโมเดลที่ถูกต้อง
-        // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลไปแสดงใน view
-        res.render("cart", { cartItems: cartItems, error: null }); // ส่ง `cartItems` และ `error: null` เมื่อไม่มีข้อผิดพลาด
-        console.log(cartItems);  // เช็คว่ามีข้อมูลหรือไม่
+        // ตรวจสอบว่า session มีข้อมูลของ USER หรือไม่
+        const UID = req.session.USER;
+        if (!UID || !UID.userId) {
+            return res.status(400).send('User is not logged in or no userId found in session');
+        }
+
+        // ดึงข้อมูลจาก API /rental
+        const cartResponse = await axios.get(base_url + '/rental');
+        // console.log(cartResponse.data);  // ตรวจสอบข้อมูลที่ได้จาก API
+        
+        // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
+        const cartItems = cartResponse.data.find(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
+        console.log(cartItems);  // ตรวจสอบข้อมูลที่ได้จาก API
+
+        // ถ้าไม่พบ cart items สำหรับผู้ใช้
+        if (!cartItems) {
+            return res.status(404).send('No cart items found for this user');
+        }
+
+        // ดึงข้อมูลกล้องจาก API /camera
+        const cameraResponse = await axios.get(base_url + '/camera');
+        
+        // ตรวจสอบว่า camera มีข้อมูลหรือไม่
+        if (!cameraResponse.data || cameraResponse.data.length === 0) {
+            return res.status(404).send('No camera data found');
+        }
+
+        // console.log(cartItems);  // ตรวจสอบข้อมูลใน cartItems
+        // console.log(cameraResponse.data);  // ตรวจสอบข้อมูลใน camera
+
+        // ส่งข้อมูลที่ดึงมาจาก API ไปแสดงใน view
+        res.render("cart", { 
+            cartItems: cartItems,  // ข้อมูลตะกร้าของผู้ใช้
+            cameras: cameraResponse.data  // ข้อมูลกล้องทั้งหมด
+        });
 
     } catch (err) {
         console.error('Error fetching cart data:', err);
@@ -250,6 +304,9 @@ app.get("/cart", async (req, res) => {
         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
     }
 });
+
+
+
 
 
 
@@ -312,37 +369,6 @@ app.get("/head", async (req, res) => {
     }
 });
 
-// app.get("/update/:id", async (req, res) => {
-//     try{
-//         const response = await axios.get(
-//         base_url + '/books/' + req.params.id);
-//         res.render("update", { book: response.data });
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
-// app.post("/update/:id", async (req, res) => {
-//     try{
-//         const data = {title: req.body.title, author: req.body.author };
-//         await axios.put(base_url + '/books/' + req.params.id, data);
-//         res.redirect("/");
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
-// app.get("/delete/:id", async (req, res) => {
-//     try{
-//         await axios.delete(base_url + '/books/' + req.params.id);
-//             res.redirect("/");
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
 
 app.listen(5000, () => {
     console.log('Server started on http://localhost:5000');
