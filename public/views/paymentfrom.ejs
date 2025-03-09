@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <link rel="stylesheet" href="test.css">
+    <link rel="stylesheet" href="../css/paymentfrom.css">
 </head>
 <body>
+    <h1>Proceed to Payment</h1>
+    <p><%= message %></p>
     <div class="container">
         <div class="checkout-form">
             <h2>Delivery Information</h2>
@@ -60,18 +62,8 @@
                 <button type="submit" class="confirm-btn">Confirm Order</button>
             </form>
         </div>
-
-        <!-- <div class="order-summary">
-            <h2>Order Summary</h2>
-            <% cart.forEach(item => { %>
-                <div class="cart-item">
-                    <p><%= item.name %> (x<%= item.quantity %>) - $<%= (item.price * item.quantity).toFixed(2) %></p>
-                </div>
-            <% }); %>
-            <p><strong>Subtotal: $<%= total.toFixed(2) %></strong></p>
-            <p><strong>Shipping: $5.00</strong></p>
-            <p><strong>Total: $<%= (total + 5).toFixed(2) %></strong></p>
-        </div> -->
+        
+        
     </div>
 </body>
 </html>

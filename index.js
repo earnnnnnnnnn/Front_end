@@ -340,15 +340,6 @@ app.post("/updateCart", (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
@@ -363,9 +354,8 @@ app.get("/create", (req, res) => {
     res.render("create");
 });
 
-app.get("/paymentfrom", (req, res) => {
-    res.render("paymentfrom");
-});
+
+
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
@@ -375,6 +365,13 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send('Error');
     }
 });
+
+app.post('/paymentfrom', (req, res) => {
+    
+
+    res.render('paymentfrom', { message: 'Proceed to payment' });
+});
+
 
 
 
