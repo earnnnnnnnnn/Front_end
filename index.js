@@ -273,7 +273,7 @@ app.get("/cart", async (req, res) => {
         // console.log(cartResponse.data);  // ตรวจสอบข้อมูลที่ได้จาก API
         
         // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
-        const cartItems = cartResponse.data.find(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
+        const cartItems = cartResponse.data.filter(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
         console.log(cartItems);  // ตรวจสอบข้อมูลที่ได้จาก API
 
         // ถ้าไม่พบ cart items สำหรับผู้ใช้
