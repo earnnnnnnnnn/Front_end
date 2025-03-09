@@ -316,25 +316,29 @@ app.post("/removeFromCart", (req, res) => {
     }
 });
 app.post("/updateCart", (req, res) => {
-    const { camera_id, rental_days } = req.body;
+    try {
+        const { camera_id, quantity } = req.body;
 
-   
-    const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
+        // ค้นหาสินค้าในตะกร้าที่มี camera_id ตรงกัน
+        const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
 
-    if (cartItem) {
-       
-        cartItem.rental_days = parseInt(rental_days);
+        if (cartItem) {
+            // อัปเดตจำนวนสินค้าในตะกร้า
+            cartItem.rental_days = parseInt(quantity);  // อัปเดตจำนวน
+            cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;  // คำนวณราคาทั้งหมด
+        }
 
-      
-        cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;
+        // คำนวณราคาใหม่ทั้งหมด
+        const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
+
+        // ส่งข้อมูลกลับไปที่ frontend
+        res.json({ success: true, totalPrice });
+    } catch (err) {
+        console.error("Error updating cart:", err);
+        res.status(500).send("Error updating cart");
     }
-
-    
-    const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
-
-    // ส่งกลับไปยังหน้า cart
-    res.redirect("/cart");
 });
+
 
 
 

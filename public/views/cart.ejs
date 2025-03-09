@@ -19,18 +19,17 @@
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
                             <div class="quantity">
-                                <button>-</button>
-                                <input type="text" value="1" readonly>
-                                <button>+</button>
+                                <button class="decrease">-</button>
+                                <input type="text" class="quantity-input" value="<%= item.rental_days || 1 %>" readonly>
+                                <button class="increase">+</button>
                             </div>
                         </div>
                         <p class="price"><%= item.rental_price_per_day %> บาท</p>
                         <form action="/removeFromCart" method="POST">
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
                             <button type="submit">Remove</button>
-                          </form>
+                        </form>
                     </div>
-                    
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
@@ -38,7 +37,7 @@
                 <a href="/" class="back">Continue Shopping</a>
             <% } %>
         </div>
-
+    
         <div class="summary">
             <h2>Summary</h2>
             <div class="summary-item">
@@ -50,6 +49,70 @@
             </form>
         </div>
     </div>
+    
+    <script>
+        // Get all increase and decrease buttons
+        const increaseButtons = document.querySelectorAll('.increase');
+        const decreaseButtons = document.querySelectorAll('.decrease');
+        
+        // Function to handle increase button click
+        increaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                let currentQuantity = parseInt(input.value);
+                input.value = currentQuantity + 1;
+                updateTotalPrice();  // Update the total price after quantity change
+                updateCartQuantity(input);  // Send updated quantity to backend
+            });
+        });
+    
+        // Function to handle decrease button click
+        decreaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.nextElementSibling;
+                let currentQuantity = parseInt(input.value);
+                if (currentQuantity > 1) {  // Avoid negative quantity
+                    input.value = currentQuantity - 1;
+                    updateTotalPrice();  // Update the total price after quantity change
+                    updateCartQuantity(input);  // Send updated quantity to backend
+                }
+            });
+        });
+    
+        // Function to update the total price on the page
+        function updateTotalPrice() {
+            let total = 0;
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const price = parseFloat(item.querySelector('.price').innerText.replace(' บาท', ''));
+                const quantity = parseInt(item.querySelector('.quantity-input').value);
+                total += price * quantity;
+            });
+            document.querySelector('.total').innerText = total + ' บาท';
+        }
+    
+        // Function to update cart quantity in the backend
+        function updateCartQuantity(input) {
+            const camera_id = input.closest('.cart-item').querySelector('input[name="camera_id"]').value;
+            const quantity = input.value;
+    
+            // Send updated quantity to the backend using fetch
+            fetch('/updateCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ camera_id, quantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Cart updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+        }
+    </script>
+    
 
 </body>
 </html>
