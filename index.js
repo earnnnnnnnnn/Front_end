@@ -55,17 +55,18 @@ app.get("/detail", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-// app.get("/cart", async (req, res) => {
-//     try{
-//         const camera = await axios.get(base_url + '/camera');
-//         const cameraId = req.query;
-//         console.log (cameraId)
-//         res.render("cart", {});
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
+
+app.get("/cart", async (req, res) => {
+    try{
+        const camera = await axios.get(base_url + '/camera');
+        const cameraId = req.query;
+        console.log (cameraId)
+        res.render("cart", {});
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Error');
+    }
+});
 
 
 
@@ -143,18 +144,150 @@ app.post("/signup", async (req, res) => {
 
 
 
+app.get("/Edit_information", async (req, res) => {
+    try {
+        const UID = req.session.USER;
+        console.log(UID)
+        const Users = await axios.get(base_url + '/users');
+        const User = Users.data.find(Users => Users.users_id == UID.userId);
+        console.log(User)
+        res.render("Edit_information",{ User: User})
 
-
-
-app.get("/users/:id", async (req, res) => {
-    try{
-        const response = await axios.get(base_url + '/users/' + req.params.id);
-        res.render("cart", { book: response.data });
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
+    } catch (err) {
+        console.error('API error:', err);
+        res.status(500).send('Error fetching data');
     }
 });
+
+
+
+
+
+// ลงทะเบียนหรืออัพเดตข้อมูลผู้ใช้
+app.post("/updateuser", async (req, res) => {
+    const { username, email, password, phone } = req.body;
+    const UID = req.session.USER;
+
+    try {
+        // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
+        const response = await axios.get(base_url + '/users');
+        const users = response.data;
+
+        // ตรวจสอบว่า email ซ้ำในฐานข้อมูลหรือไม่
+        const userExist = users.find(user => user.email === email && user.id !== UID.userId);
+        if (userExist) {
+            return res.status(400).send("Email already exists.");
+        }
+
+        // ตรวจสอบรหัสผ่านให้มีความยาว 8 ตัวและเป็นตัวเลข
+        if (password.length !== 8 || isNaN(password)) {
+            return res.status(400).send("Password must be 8 digits and numeric.");
+        }
+
+        // ใช้ PUT แทน POST เพื่ออัพเดตข้อมูลผู้ใช้ที่มีอยู่แล้ว
+        await axios.put(base_url + `/users/${UID.userId}`, {
+            username,
+            email,
+            password, // ส่งรหัสผ่านตรงๆ (ถ้าไม่เข้ารหัสรหัสผ่านต้องมั่นใจ)
+            phone_number: phone
+        });
+
+        res.redirect("/Edit_information"); // รีไดเรกต์ไปยังหน้าที่มีการแก้ไขข้อมูล
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error updating data');
+    }
+});
+
+
+app.get("/report", async (req, res) => {
+    try {
+        // ดึงข้อมูลจากตาราง user, rental, และ return
+        const users = await User.findAll(); // สมมติว่า User เป็นโมเดลที่เชื่อมกับตาราง user
+        const rentals = await Rental.findAll(); // สมมติว่า Rental เป็นโมเดลที่เชื่อมกับตาราง rental
+        const returns = await Return.findAll(); // สมมติว่า Return เป็นโมเดลที่เชื่อมกับตาราง return
+
+        // ส่งข้อมูลไปยังหน้า report.ejs
+        res.render("report", { users, rentals, returns });
+    } catch (err) {
+        console.error("Error fetching report data:", err);
+        res.status(500).send('Error fetching report data');
+    }
+});
+
+
+
+app.get("/cart", async (req, res) => {
+    try {
+        // ดึงข้อมูลตะกร้าจากฐานข้อมูล (หรือจาก Session, ขึ้นอยู่กับการตั้งค่า)
+        const cartItems = await Cart.findAll();  // แทนที่ด้วยโมเดลที่คุณใช้งาน
+        const cameras = await Camera.findAll(); // ดึงข้อมูลกล้องทั้งหมดจากฐานข้อมูล
+
+        // ส่งข้อมูลไปยังหน้า cart.ejs
+        res.render("cart", { cartItems: cartItems, cameras: cameras });
+    } catch (err) {
+        console.error("Error fetching cart data:", err);
+        res.status(500).send("Error fetching cart data");
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+// // เส้นทางสำหรับแสดงตะกร้าสินค้า
+// app.get("/cart", async (req, res) => {
+//     try {
+//         const cartItems = await Cart.findAll(); // ดึงข้อมูลจากฐานข้อมูล
+//         console.log(cartItems); // แสดงผลใน console เพื่อตรวจสอบ
+//         res.render("cart", { cartItems: cartItems });
+//     } catch (err) {
+//         console.error('Error fetching cart data:', err);
+//         res.status(500).send('Error fetching cart data');
+//     }
+// });
+
+
+
+// // เส้นทาง GET สำหรับดูข้อมูลใน cart
+// app.get("/cart", async (req, res) => {
+//     try {
+//         // ดึงข้อมูลจาก Cart ในฐานข้อมูล
+//         const cartItems = await Cart.findAll(); // สมมติว่า `Cart` เป็นโมเดลที่ถูกต้อง
+
+//         // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลไปแสดงใน view
+//         res.render("cart", { cartItems: cartItems, error: null }); // ส่ง `cartItems` และ `error: null` เมื่อไม่มีข้อผิดพลาด
+//     } catch (err) {
+//         console.error('Error fetching cart data:', err);
+//         // ส่งข้อความ error ไปยัง Frontend
+//         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
+//     }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get("/users/:id", async (req, res) => {
     try{
@@ -188,98 +321,19 @@ app.get('/detail', (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.post("/create", async (req, res) => {
-//     try{
-//         const data = {username: req.body.username, password:req.body.password, email: req.body.email, phone: req.body.phone};
-        
-//         await axios.post(base_url + '/users', data);
-
-//         res.redirect("/");
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
-
-
-
-// app.post("/login", async (req, res) => {
-//     try{
-//         const data = { email: req.body.email,password:req.body.password};
-        
-//         await axios.post(base_url + '/users', data);
-
-//         res.redirect("/");
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
-
-// // const Users = require('../models/User'); // ตรวจสอบว่า path ถูกต้อง
-// app.post("/users", async (req, res) => {
-//     try {
-//         const { username, password, email, phone } = req.body;
-
-//         // ตรวจสอบข้อมูลที่ได้รับ
-//         if (!username || !password || !email || !phone) {
-//             return res.status(400).send('กรุณากรอกข้อมูลให้ครบถ้วน');
-//         }
-
-//         // แฮชรหัสผ่านก่อนที่จะบันทึก
-//         const hashedPassword = await bcrypt.hash(password, 10);
-
-//         // สร้างผู้ใช้ใหม่
-//         const newUser   = await Users.create({
-//             username,
-//             password: hashedPassword,
-//             email,
-//             phone_number: phone
-//         });
-
-//         // เปลี่ยนไปที่หน้าเข้าสู่ระบบหลังจากลงทะเบียนสำเร็จ
-//         res.redirect("/login");
-//     } catch (err) {
-//         console.error("เกิดข้อผิดพลาดระหว่างการลงทะเบียน:", err);
-//         res.status(500).send('เกิดข้อผิดพลาดระหว่างการลงทะเบียน');
-//     }
-// });
-
-
-// app.get("/register", (req, res) => {
-//     res.render("register");  
-// });
-app.get("/cart", async (req, res) => {
-    const loginSession = req.session.USER;
+// app.get("/cart", async (req, res) => {
+//     const loginSession = req.session.USER;
     
-    const cameras = await axios.get(base_url + '/camera')
-    const rentals = await axios.get(base_url + '/rental')
-    const cartItems = rentals.data.filter(rental => rental.users_id == loginSession.userId)
+//     const cameras = await axios.get(base_url + '/camera')
+//     const rentals = await axios.get(base_url + '/rental')
+//     const cartItems = rentals.data.filter(rental => rental.users_id == loginSession.userId)
     
-    res.render("cart", {cameras: cameras.data, cartItems: cartItems});  
-});
-app.get("/head", (req, res) => {
-    res.render("head");  
-});
+//     res.render("cart", {cameras: cameras.data, cartItems: cartItems});  
+// });
+
+
+
+
 app.get("/rentalProcess", (req, res) => {
     res.render("rentalProcess");  
 });

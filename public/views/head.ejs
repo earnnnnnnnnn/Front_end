@@ -20,7 +20,7 @@
               <li><a href="#contact">Contact</a></li>
               <li>
                 <% if (loginSession) { %>
-                  <a href="/login">Info</a>
+                  <a href="/Edit_information">Edit_information</a>
                 <% } else { %>
                   <a href="/login">Login</a>
                 <% } %>
@@ -51,7 +51,7 @@
                 <h3><%= cameraname[i].cameraname %></h3>
                 <p><%= cameraname[i].rental_price_per_day %> bath</p>
                 
-                <form action="/cart" method="GET">
+                <form action="/cart" method="POST">
                   <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
                   <input type="hidden" name="cameraname" value="<%= cameraname[i].cameraname %>">
                   <input type="hidden" name="rental_price_per_day" value="<%= cameraname[i].rental_price_per_day %>">

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+    <div class="center">
+        <h1>ข้อมูลส่วนตัว</h1>
+
+        <!-- ฟอร์มที่ส่งข้อมูลไปยัง Backend -->
+        <form action="/updateuser" method="post"> 
+            <!-- Username Input -->
+            <div class="txt_field">
+                <input type="text" name="username" required>  
+                <span></span>
+                <label>Username</label>
+                <p><%= User.username%></p>
+            </div>
+
+            <!-- Password Input -->
+            <div class="txt_field">
+                <input type="password" name="password" required>  
+                <span></span>
+                <label>Password</label>
+                <p><%= User.password%></p>
+            </div>
+
+            <!-- Email Input -->
+            <div class="txt_field">
+                <input type="email" name="email" required>  
+                <span></span>
+                <label>Email</label>
+                <p><%= User.email%></p>
+            </div>
+
+            <!-- Phone Input -->
+            <div class="txt_field">
+                <input type="tel" name="phone" required>  
+                <span></span>
+                <label>Phone</label>
+                <p><%= User.phone_number%></p>
+            </div>
+
+            <!-- Submit Button -->
+            <input type="submit" value="edit">
+            
+            <input type="submit" value="ดูประวัติการสั่งซื้อ">
+
+            <a href="/"><input type="button" value="ยกเลิก"></a>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>
