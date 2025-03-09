@@ -304,26 +304,25 @@ app.post("/updateuser", async (req, res) => {
 // });
 
 
-app.get('/cart', (req, res) => {
-    let cart = req.session.cart || []; // หากไม่มีตะกร้าใน session ให้ใช้ array ว่าง
-    let totalPrice = 0;
+app.get("/cart", (req, res) => {
+    try {
+        const cart = req.session.cart || [];  // Assuming the cart is stored in the session
+        const loginSession = req.session.USER;
+        
+        // Calculate the total price from the cart
+        const totalPrice = cart.reduce((sum, item) => sum + parseFloat(item.rental_price_per_day), 0);
 
-    // คำนวณยอดรวมจากสินค้าในตะกร้า
-    cart.forEach(item => {
-        totalPrice += item.rental_price_per_day; // หาผลรวมจาก rental_price_per_day
-    });
-
-    // ส่งข้อมูลไปที่หน้า cart.ejs
-    res.render('cart', {
-        cart: cart,
-        totalPrice: totalPrice
-    });
+        res.render("cart", { cart, totalPrice, loginSession });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error');
+    }
 });
 
 
 // Route สำหรับการเพิ่มสินค้าไปยังตะกร้า
 app.post('/cart', (req, res) => {
-    const { camera_id, cameraname, rental_price_per_day } = req.body;
+    const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
 
     // เช็คว่ามีตะกร้าหรือยังใน session
     if (!req.session.cart) {
@@ -334,7 +333,7 @@ app.post('/cart', (req, res) => {
     const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
     if (!existingItem) {
         // ถ้ายังไม่มีสินค้าในตะกร้าให้เพิ่มเข้าไป
-        req.session.cart.push({ camera_id, cameraname, rental_price_per_day });
+        req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
     }
 
     // ส่งผู้ใช้ไปที่หน้า /cart ที่แสดงสินค้าภายในตะกร้า
@@ -345,9 +344,10 @@ app.post("/removeFromCart", (req, res) => {
     try {
         const { camera_id } = req.body;
 
-        // กรองสินค้าที่ยังเหลืออยู่ในตะกร้า
+        // ลบสินค้าออกจากตะกร้าใน session โดยใช้ camera_id
         req.session.cart = req.session.cart.filter(item => item.camera_id !== camera_id);
 
+        // รีไดเร็กต์กลับไปที่หน้า cart
         res.redirect("/cart");
     } catch (err) {
         console.error("Error removing item from cart:", err);

@@ -25,7 +25,10 @@
                             </div>
                         </div>
                         <p class="price"><%= item.rental_price_per_day %> บาท</p>
-                        <button class="remove">Remove</button>
+                        <form action="/removeFromCart" method="POST">
+                            <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
+                            <button type="submit">Remove</button>
+                        </form>
                     </div>
                     
                 <% }); %>
