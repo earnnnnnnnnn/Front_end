@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="../css/paymentfrom.css">
 </head>
 <body>
-    <h1>Proceed to Payment</h1>
-    <p><%= message %></p>
+    
     <div class="container">
         <div class="checkout-form">
             <h2>Delivery Information</h2>
@@ -26,23 +25,10 @@
                     <input type="email" name="email" required>
                 </div>
                 <div class="input-group">
-                    <label>City</label>
-                    <input type="text" name="city" required>
-                </div>
-                <div class="input-group">
-                    <label>State</label>
-                    <input type="text" name="state" required>
-                </div>
-                <div class="input-group">
                     <label>Address</label>
                     <input type="text" name="address" required>
                 </div>
 
-                <h3>Schedule Delivery</h3>
-                <div class="input-group">
-                    <input type="checkbox" id="schedule" name="schedule">
-                    <label for="schedule">Enable Scheduled Delivery</label>
-                </div>
                 <div class="input-group">
                     <label>Dates</label>
                     <input type="date" name="delivery_date">
@@ -54,10 +40,13 @@
 
                 <h3>Payment Method</h3>
                 <div class="payment-methods">
-                    <label><input type="radio" name="payment" value="online"> Online Payment</label>
-                    <label><input type="radio" name="payment" value="cod" checked> Cash on Delivery</label>
-                    <label><input type="radio" name="payment" value="pos"> POS on Delivery</label>
+                    <label><input type="radio" name="payment" value="online">Qr promtpay</label>
+                    <label><input type="radio" name="payment" value="online">Mobile Banking</label>
                 </div>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="image" id="fileUpload" accept="image/*" required>
+                    <button type="submit">Upload</button>
+                </form>
 
                 <button type="submit" class="confirm-btn">Confirm Order</button>
             </form>
