@@ -218,39 +218,46 @@ app.post("/updateuser", async (req, res) => {
 });
 
 
-// app.get("/report", async (req, res) => {
-//     try {
-//         // ดึงข้อมูลจากตาราง user, rental, และ return
-//         const users = await User.findAll(); // สมมติว่า User เป็นโมเดลที่เชื่อมกับตาราง user
-//         const rentals = await Rental.findAll(); // สมมติว่า Rental เป็นโมเดลที่เชื่อมกับตาราง rental
-//         const returns = await Return.findAll(); // สมมติว่า Return เป็นโมเดลที่เชื่อมกับตาราง return
-
-//         // ส่งข้อมูลไปยังหน้า report.ejs
-//         res.render("report", { users, rentals, returns });
-//     } catch (err) {
-//         console.error("Error fetching report data:", err);
-//         res.status(500).send('Error fetching report data');
-//     }
-// });
 
 
-
-
-
-//นัทสอน
+// อันที่ได้
 // app.get("/cart", async (req, res) => {
 //     try {
-//         // ดึงข้อมูลจาก Cart ในฐานข้อมูล
+//         // ตรวจสอบว่า session มีข้อมูลของ USER หรือไม่
 //         const UID = req.session.USER;
-//         const cart = await axios.get(base_url + '/rental');
-//         const cartItems = cart.data.find(user =>  user.id === UID.userId);
+//         if (!UID || !UID.userId) {
+//             return res.status(400).send('User is not logged in or no userId found in session');
+//         }
 
-//         const camera = await axios.get(base_url + '/camera');
+//         // ดึงข้อมูลจาก API /rental
+//         const cartResponse = await axios.get(base_url + '/rental');
+//         // console.log(cartResponse.data);  // ตรวจสอบข้อมูลที่ได้จาก API
+        
+//         // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
+//         const cartItems = cartResponse.data.filter(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
+//         console.log(cartItems);  // ตรวจสอบข้อมูลที่ได้จาก API
 
-//         console.log(cartItems);
-//         console.log(camera);
-//         // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลและ API ไปแสดงใน view
-//         res.render("cart", { cartItems: cartItems.data, camera: camera.data });
+//         // ถ้าไม่พบ cart items สำหรับผู้ใช้
+//         if (!cartItems) {
+//             return res.status(404).send('No cart items found for this user');
+//         }
+
+//         // ดึงข้อมูลกล้องจาก API /camera
+//         const cameraResponse = await axios.get(base_url + '/camera');
+        
+//         // ตรวจสอบว่า camera มีข้อมูลหรือไม่
+//         if (!cameraResponse.data || cameraResponse.data.length === 0) {
+//             return res.status(404).send('No camera data found');
+//         }
+
+//         // console.log(cartItems);  // ตรวจสอบข้อมูลใน cartItems
+//         // console.log(cameraResponse.data);  // ตรวจสอบข้อมูลใน camera
+
+//         // ส่งข้อมูลที่ดึงมาจาก API ไปแสดงใน view
+//         res.render("cart", { 
+//             cartItems: cartItems,  // ข้อมูลตะกร้าของผู้ใช้
+//             cameras: cameraResponse.data  // ข้อมูลกล้องทั้งหมด
+//         });
 
 //     } catch (err) {
 //         console.error('Error fetching cart data:', err);
@@ -258,6 +265,106 @@ app.post("/updateuser", async (req, res) => {
 //         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
 //     }
 // });
+
+
+
+
+
+// app.get("/cart", (req, res) => {
+//     try {
+//         const cartItems = req.session.cart || [];
+
+//         res.render("cart", { cartItems });  // ส่งข้อมูลตะกร้าไปยังหน้า cart
+//     } catch (err) {
+//         console.error("Error fetching cart data:", err);
+//         res.status(500).send("Error fetching cart data");
+//     }
+// });
+
+// app.post("/cart", async (req, res) => {
+//     try {
+//         // รับข้อมูลที่ส่งจากฟอร์ม
+//         const { camera_id, cameraname, rental_price_per_day } = req.body;
+
+//         // ถ้า session ยังไม่มี cart, ให้สร้างขึ้นมา
+//         if (!req.session.cart) {
+//             req.session.cart = [];
+//         }
+
+//         // เพิ่มกล้องที่เลือกลงในตะกร้า (หากกล้องมีอยู่แล้วในตะกร้า จะเพิ่มจำนวน)
+//         req.session.cart.push({
+//             camera_id,
+//             cameraname,
+//             rental_price_per_day
+//         });
+
+//         // ส่งกลับไปยังหน้า cart
+//         res.redirect("/cart");
+
+//     } catch (err) {
+//         console.error("Error adding camera to cart:", err);
+//         res.status(500).send("Error adding camera to cart");
+//     }
+// });
+
+
+
+app.get("/cart", (req, res) => {
+    try {
+        const cartItems = req.session.cart || []; // ดึงข้อมูลจาก session
+        console.log(cartItems);
+        res.render("cart", { cartItems });  // ส่งข้อมูลตะกร้าไปยังหน้า cart
+    } catch (err) {
+        console.error("Error fetching cart data:", err);
+        res.status(500).send("Error fetching cart data");
+    }
+});
+
+
+app.post("/cart", async (req, res) => {
+    try {
+        // รับข้อมูลจากฟอร์ม
+        const { camera_id, cameraname, rental_price_per_day } = req.body;
+
+        // ถ้า session ยังไม่มี cart, ให้สร้างขึ้นมา
+        if (!req.session.cart) {
+            req.session.cart = [];
+        }
+
+        // เพิ่มกล้องที่เลือกลงในตะกร้า
+        req.session.cart.push({
+            camera_id,
+            cameraname,
+            rental_price_per_day
+        });
+
+        // ส่งกลับไปยังหน้า cart
+        res.redirect("/cart");
+
+    } catch (err) {
+        console.error("Error adding camera to cart:", err);
+        res.status(500).send("Error adding camera to cart");
+    }
+});
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.get("/cart", async (req, res) => {
@@ -304,8 +411,6 @@ app.get("/cart", async (req, res) => {
         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
     }
 });
-
-
 
 
 

@@ -11,18 +11,22 @@
         
         <div class="cart">
             <h2>Shopping Cart</h2>
-            
             <!-- แสดงจำนวนสินค้าที่มีในตะกร้า -->
-            <p class="item-count"><%= cartItems.length %> Items</p> 
+            <p class="item-count"><%= cartItems ? cartItems.length : 0 %> Items</p> 
             
             <div class="cart-items-list">
                 <% if (cartItems && cartItems.length > 0) { %>
                     <% cartItems.forEach(function(item) { %>
                         <div class="cart-item">
                             <div class="item-details">
-                                <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
-                                <h3><%= item.cameraname %></h3>
-                                <p>Price: $<%= item.rental_price_per_day %> per day</p>
+                                <% const camera = cameras.find(camera => camera.camera_id == item.camera_id); %>
+                                <img src="../image/<%= camera.cameraimg %>" alt="">
+                                <% if (camera) { %>
+                                    <h3><%= camera.cameraname %></h3>
+                                    <p>Price: $<%= item.total_price %></p>
+                                <% } else { %>
+                                    <h3>Unknown Camera</h3>
+                                <% } %>
                             </div>
                         </div>
                     <% }); %>
@@ -30,9 +34,17 @@
                     <p>Your cart is empty.</p>
                 <% } %>
             </div>
-        
+            
             <a href="/" class="back">← Back to shop</a>
         </div>
         
+        
+    </div>
+
+    <script>
+        function checkout() {
+            window.location.href = "/checkout";
+        }
+    </script>
 </body>
 </html>

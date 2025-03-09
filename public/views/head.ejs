@@ -56,7 +56,11 @@
                   <input type="hidden" name="cameraname" value="<%= cameraname[i].cameraname %>">
                   <input type="hidden" name="rental_price_per_day" value="<%= cameraname[i].rental_price_per_day %>">
                   <button class="button-submit" type="submit">Add</button>
-                </form>
+                   <!-- ปุ่ม "Add to Cart" สำหรับแต่ละกล้อง -->
+                  <!-- <a href="/cart?camera_id=<%= cameraname[i].camera_id %>" class="add-to-cart-btn">Add to Cart</a> -->
+                  </form>
+
+
                 <form action="/detail" method="GET" class="detail-form">
                   <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
                   <button type="button" class="button-submit" onclick="goToDetail(this)">ดูรายละเอียด</button>
