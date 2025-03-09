@@ -57,10 +57,23 @@
                   <input type="hidden" name="rental_price_per_day" value="<%= cameraname[i].rental_price_per_day %>">
                   <button class="button-submit" type="submit">Add</button>
                 </form>
-                <form action="/detail" method="GET">
+                <form action="/detail" method="GET" class="detail-form">
                   <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
-                  <button class="button-submit" type="submit">Details</button>
+                  <button type="button" class="button-submit" onclick="goToDetail(this)">ดูรายละเอียด</button>
                 </form>
+                
+                <script>
+                  function goToDetail(button) {
+                    // ป้องกันการส่งฟอร์ม
+                    const form = button.closest('form');
+                    const cameraId = form.querySelector('input[name="camera_id"]').value;
+                    
+                    // เปลี่ยนหน้าไปที่ /detail พร้อมกับ camera_id
+                    window.location.href = `/detail?camera_id=${cameraId}`;
+                  }
+                </script>
+                
+                                                
             </div>
           <% } %>
         </div>

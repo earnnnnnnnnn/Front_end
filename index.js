@@ -44,17 +44,35 @@ app.get("/", async (req, res) => {
     }
 });
 
+// เส้นทางเพื่อดึงข้อมูลกล้องตาม camera_id
 app.get("/detail", async (req, res) => {
-    try{
-        const camera = await axios.get(base_url + '/camera');
-        const cameraId = req.query;
-        console.log (cameraId)
-        res.render("detail", {});
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
+    try {
+        const cameraId = req.query.camera_id;  // รับ camera_id จาก query
+        console.log("Camera ID:", cameraId);  // เช็คว่าได้ค่า camera_id มาหรือไม่
+        
+        if (!cameraId) {
+            return res.status(400).send("Camera ID is required");
+        }
+
+        // ดึงข้อมูลกล้องจากฐานข้อมูลหรือ API
+        const cameraResponse = await axios.get(`${base_url}/camera/${cameraId}`);
+        const camera = cameraResponse.data;
+
+        res.render("detail", { camera });  // ส่งข้อมูลกล้องไปยังหน้า detail
+    } catch (err) {
+        console.error("Error fetching camera details:", err);
+        res.status(500).send("Error fetching camera details");
     }
 });
+app.get('/detail', (req, res) => {
+    const cameraId = req.query.camera_id; // ดึงค่า camera_id จาก query string
+    
+    res.render('detail', { cameraId: cameraId });
+  });
+  
+
+
+
 
 // app.get("/cart", async (req, res) => {
 //     try{
@@ -236,21 +254,6 @@ app.get("/cart", async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
@@ -277,9 +280,7 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-app.get('/detail', (req, res) => {
-    res.render('detail');
-});
+
 
 
 

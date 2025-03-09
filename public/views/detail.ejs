@@ -1,38 +1,19 @@
 <!DOCTYPE html>
-<html lang="th">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/detail.css">
-    <title>รายละเอียดสินค้า - DIY Computer</title>
+    <title>Camera Details</title>
 </head>
-
 <body>
-    <header>
-        <a href="/" class="logo"><img src="../../img/_logo_store.png" alt=""></a><a href="/" class="logo"><img src="../../img/_logo_store.png" alt=""></a>
-
-        <form class="search-bar" action="/search" method="GET">
-            <input type="text" name="query" placeholder="ค้นหาสินค้า..." />
-            <button type="submit">ค้นหา</button>
-        </form>
-
-    </header>
-
-
-    <div class="container">
-        <h2 class="section-title">รายละเอียดสินค้า</h2>
-
-        <div class="product-details">
-            <div class="product-image">
-                <img src="product-image.jpg" alt="Product Image" />
-            </div>       
-        </div>
+    <div class="camera-detail">
+        <h1><%= camera.cameraname %></h1>
+        <img src="../image/<%= camera.cameraimg %>" alt="<%= camera.cameraname %>">
+        <p><strong>Brand:</strong> <%= camera.brand %></p>
+        <p><strong>Status:</strong> <%= camera.status %></p>
+        <p><strong>Price per day:</strong> <%= camera.rental_price_per_day %> Baht</p>
+        <p><strong>Replacement cost:</strong> <%= camera.replacement_cost %> Baht</p>
     </div>
+    <a href="/">Back to Home</a>
 </body>
-
-<footer>
-    &copy; 2025 DIY Computer | สงวนลิขสิทธิ์
-</footer>
-
 </html>
