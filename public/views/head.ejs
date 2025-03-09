@@ -16,23 +16,37 @@
               <li><a href="#home">Home</a></li>
               <li><a href="#featured-cameras">Cameras</a></li>
               <li><a href="/rentalProcess">Rental Process</a></li>
-              <li><a href="/cart">Cart 
-                <div class="cart-icon">
-                  <a href="/cart">
-                      <i class="fa fa-shopping-cart"></i> 
-                      <span class="cart-count"><%= cartCount %></span>
-                  </a>
-              </div>
-              </a></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
-              <li><a href="#contact">Contact</a></li>
+          
+              <!-- ตรวจสอบการล็อกอิน -->
               <li>
-                <% if (loginSession) { %>
-                  <a href="/Edit_information">Edit_information</a>
-                <% } else { %>
-                  <a href="/login">Login</a>
-                <% } %>
+                  <% if (loginSession) { %>
+                      <a href="/cart">
+                          Cart 
+                          <div class="cart-icon">
+                              <i class="fa fa-shopping-cart"></i> 
+                              <span class="cart-count"><%= cartCount %></span>
+                          </div>
+                      </a>
+                  <% } else { %>
+                      <a href="/login">Cart</a>
+                  <% } %>
               </li>
-            </ul>
+          
+              <li><a href="#contact">Contact</a></li>
+              
+              <li>
+                  <% if (loginSession) { %>
+                      <a href="/Edit_information">Edit Information</a>
+                      <!-- ปุ่ม Logout อยู่หลัง Edit Information -->
+                      <a href="/logout">Logout</a>
+                  <% } else { %>
+                      <a href="/login">Login</a>
+                  <% } %>
+              </li>
+          </ul>
+          
+          
+          
           </nav>
         </div>
         

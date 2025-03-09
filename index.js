@@ -265,21 +265,27 @@ app.post("/updateuser", async (req, res) => {
 // });
 
 
-
 app.get("/cart", (req, res) => {
     try {
         const cart = req.session.cart || [];  // Assuming the cart is stored in the session
-        const loginSession = req.session.USER;
-        
-        // Calculate the total price from the cart
+        const loginSession = req.session.USER;  // ตรวจสอบว่า session.USER มีค่าหรือไม่ (หมายถึงผู้ใช้ล็อกอิน)
+
+        // ถ้าผู้ใช้ไม่ได้ล็อกอิน, รีไดเร็กต์ไปยังหน้า login
+        if (!loginSession) {
+            return res.redirect('/login');  // ถ้ายังไม่ได้ล็อกอิน ให้ไปที่หน้า login
+        }
+
+        // คำนวณราคาทั้งหมดจากตะกร้า
         const totalPrice = cart.reduce((sum, item) => sum + parseFloat(item.rental_price_per_day), 0);
 
+        // ส่งข้อมูลไปที่หน้า cart.ejs
         res.render("cart", { cart, totalPrice, loginSession });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error');
     }
 });
+
 
 
 
@@ -366,11 +372,23 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
-app.post('/paymentfrom', (req, res) => {
-    
 
+app.post('/paymentfrom', (req, res) => {
     res.render('paymentfrom', { message: 'Proceed to payment' });
 });
+
+app.get('/payment', (req, res) => {
+    console.log(req.session.USER);  // ตรวจสอบค่าของ USER ใน session
+    const user = req.session.USER;
+
+    if (user) {
+        res.render('paymentfrom', { User: user });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+
 
 
 
@@ -403,6 +421,18 @@ app.get("/head", async (req, res) => {
         res.status(500).send('Error');
     }
 });
+
+// Route สำหรับ Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("Failed to log out");
+        }
+        // รีไดเร็กต์ผู้ใช้ไปที่หน้า login หลังจากออกจากระบบ
+        res.redirect('/login');
+    });
+});
+
 
 
 app.listen(5000, () => {
