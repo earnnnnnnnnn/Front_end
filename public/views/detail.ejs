@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera Details</title>
+    <link rel="stylesheet" href="../css/detail.css">
+
 </head>
 <body>
-    <div class="camera-detail">
-        <h1><%= camera.cameraname %></h1>
-        <img src="../image/<%= camera.cameraimg %>" alt="<%= camera.cameraname %>">
-        <p><strong>Brand:</strong> <%= camera.brand %></p>
-        <p><strong>Status:</strong> <%= camera.status %></p>
-        <p><strong>Price per day:</strong> <%= camera.rental_price_per_day %> Baht</p>
-        <p><strong>Replacement cost:</strong> <%= camera.replacement_cost %> Baht</p>
+    <div class="product-details">
+        <div class="product-image">
+            <img src="../image/<%= camera.cameraimg %>" alt="<%= camera.cameraname %>">
+        </div>
+        <div class="product-info">
+            <h3><%= camera.cameraname %></h3>
+            <p><strong>Brand:</strong> <%= camera.brand %></p>
+            <p><strong>Status:</strong> <%= camera.status %></p>
+            <p><strong>Price per day:</strong> <%= camera.rental_price_per_day %> Baht</p>
+            <p><strong>Replacement cost:</strong> <%= camera.replacement_cost %> Baht</p>
+            <a href="/" class="btn">Back to Home</a>
+        </div>
     </div>
-    <a href="/">Back to Home</a>
 </body>
 </html>
