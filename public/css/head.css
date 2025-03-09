@@ -84,6 +84,12 @@
     height: auto;
     display: block;
   }
+  .cart-icon {
+    position: relative;
+    display: inline-block;
+}
+
+
 
   /* Hero Section */
   .hero {

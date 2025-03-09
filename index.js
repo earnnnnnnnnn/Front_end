@@ -32,12 +32,14 @@ app.use(express.static(__dirname + '/public'));
 app.get("/", async (req, res) => {
     try{
         const loginSession = req.session.USER;
+        const cameraname = await axios.get(base_url + '/camera');
 
         console.log(loginSession);
+        const cartCount = req.session.cart ? req.session.cart.length : 0;
         
 
-        const cameraname = await axios.get(base_url + '/camera');
-        res.render("head", { cameraname: cameraname.data, loginSession });
+        
+        res.render("head", { cameraname: cameraname.data, loginSession, cartCount });
     }catch(err){
         console.error(err);
         res.status(500).send('Error');
@@ -320,23 +322,22 @@ app.get("/cart", (req, res) => {
 });
 
 
-// Route สำหรับการเพิ่มสินค้าไปยังตะกร้า
+
 app.post('/cart', (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
 
-    // เช็คว่ามีตะกร้าหรือยังใน session
+    
     if (!req.session.cart) {
-        req.session.cart = [];  // สร้างตะกร้าใหม่ถ้ายังไม่มี
+        req.session.cart = [];  
     }
 
-    // ตรวจสอบว่ามีสินค้านี้ในตะกร้าแล้วหรือยัง
     const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
     if (!existingItem) {
-        // ถ้ายังไม่มีสินค้าในตะกร้าให้เพิ่มเข้าไป
+       
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
     }
 
-    // ส่งผู้ใช้ไปที่หน้า /cart ที่แสดงสินค้าภายในตะกร้า
+   
     res.redirect('/cart');
 });
 
@@ -353,6 +354,26 @@ app.post("/removeFromCart", (req, res) => {
         console.error("Error removing item from cart:", err);
         res.status(500).send("Error removing item from cart");
     }
+});
+app.post("/updateCart", (req, res) => {
+    const { camera_id, rental_days } = req.body;
+
+   
+    const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
+
+    if (cartItem) {
+       
+        cartItem.rental_days = parseInt(rental_days);
+
+      
+        cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;
+    }
+
+    
+    const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
+
+    // ส่งกลับไปยังหน้า cart
+    res.redirect("/cart");
 });
 
 
