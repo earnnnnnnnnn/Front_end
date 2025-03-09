@@ -56,17 +56,17 @@ app.get("/detail", async (req, res) => {
     }
 });
 
-app.get("/cart", async (req, res) => {
-    try{
-        const camera = await axios.get(base_url + '/camera');
-        const cameraId = req.query;
-        console.log (cameraId)
-        res.render("cart", {});
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
-});
+// app.get("/cart", async (req, res) => {
+//     try{
+//         const camera = await axios.get(base_url + '/camera');
+//         const cameraId = req.query;
+//         console.log (cameraId)
+//         res.render("cart", {});
+//     }catch(err){
+//         console.error(err);
+//         res.status(500).send('Error');
+//     }
+// });
 
 
 
@@ -200,76 +200,38 @@ app.post("/updateuser", async (req, res) => {
 });
 
 
-app.get("/report", async (req, res) => {
-    try {
-        // ดึงข้อมูลจากตาราง user, rental, และ return
-        const users = await User.findAll(); // สมมติว่า User เป็นโมเดลที่เชื่อมกับตาราง user
-        const rentals = await Rental.findAll(); // สมมติว่า Rental เป็นโมเดลที่เชื่อมกับตาราง rental
-        const returns = await Return.findAll(); // สมมติว่า Return เป็นโมเดลที่เชื่อมกับตาราง return
+// app.get("/report", async (req, res) => {
+//     try {
+//         // ดึงข้อมูลจากตาราง user, rental, และ return
+//         const users = await User.findAll(); // สมมติว่า User เป็นโมเดลที่เชื่อมกับตาราง user
+//         const rentals = await Rental.findAll(); // สมมติว่า Rental เป็นโมเดลที่เชื่อมกับตาราง rental
+//         const returns = await Return.findAll(); // สมมติว่า Return เป็นโมเดลที่เชื่อมกับตาราง return
 
-        // ส่งข้อมูลไปยังหน้า report.ejs
-        res.render("report", { users, rentals, returns });
-    } catch (err) {
-        console.error("Error fetching report data:", err);
-        res.status(500).send('Error fetching report data');
-    }
-});
+//         // ส่งข้อมูลไปยังหน้า report.ejs
+//         res.render("report", { users, rentals, returns });
+//     } catch (err) {
+//         console.error("Error fetching report data:", err);
+//         res.status(500).send('Error fetching report data');
+//     }
+// });
 
 
 
+// เส้นทาง GET สำหรับดูข้อมูลใน cart
 app.get("/cart", async (req, res) => {
     try {
-        // ดึงข้อมูลตะกร้าจากฐานข้อมูล (หรือจาก Session, ขึ้นอยู่กับการตั้งค่า)
-        const cartItems = await Cart.findAll();  // แทนที่ด้วยโมเดลที่คุณใช้งาน
-        const cameras = await Camera.findAll(); // ดึงข้อมูลกล้องทั้งหมดจากฐานข้อมูล
+        // ดึงข้อมูลจาก Cart ในฐานข้อมูล
+        const cartItems = await Cart.findAll(); // สมมติว่า `Cart` เป็นโมเดลที่ถูกต้อง
+        // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลไปแสดงใน view
+        res.render("cart", { cartItems: cartItems, error: null }); // ส่ง `cartItems` และ `error: null` เมื่อไม่มีข้อผิดพลาด
+        console.log(cartItems);  // เช็คว่ามีข้อมูลหรือไม่
 
-        // ส่งข้อมูลไปยังหน้า cart.ejs
-        res.render("cart", { cartItems: cartItems, cameras: cameras });
     } catch (err) {
-        console.error("Error fetching cart data:", err);
-        res.status(500).send("Error fetching cart data");
+        console.error('Error fetching cart data:', err);
+        // ส่งข้อความ error ไปยัง Frontend
+        res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-// // เส้นทางสำหรับแสดงตะกร้าสินค้า
-// app.get("/cart", async (req, res) => {
-//     try {
-//         const cartItems = await Cart.findAll(); // ดึงข้อมูลจากฐานข้อมูล
-//         console.log(cartItems); // แสดงผลใน console เพื่อตรวจสอบ
-//         res.render("cart", { cartItems: cartItems });
-//     } catch (err) {
-//         console.error('Error fetching cart data:', err);
-//         res.status(500).send('Error fetching cart data');
-//     }
-// });
-
-
-
-// // เส้นทาง GET สำหรับดูข้อมูลใน cart
-// app.get("/cart", async (req, res) => {
-//     try {
-//         // ดึงข้อมูลจาก Cart ในฐานข้อมูล
-//         const cartItems = await Cart.findAll(); // สมมติว่า `Cart` เป็นโมเดลที่ถูกต้อง
-
-//         // ส่งข้อมูลที่ดึงมาจากฐานข้อมูลไปแสดงใน view
-//         res.render("cart", { cartItems: cartItems, error: null }); // ส่ง `cartItems` และ `error: null` เมื่อไม่มีข้อผิดพลาด
-//     } catch (err) {
-//         console.error('Error fetching cart data:', err);
-//         // ส่งข้อความ error ไปยัง Frontend
-//         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
-//     }
-// });
 
 
 
