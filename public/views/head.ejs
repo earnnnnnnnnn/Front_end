@@ -16,17 +16,26 @@
               <li><a href="#home">Home</a></li>
               <li><a href="#featured-cameras">Cameras</a></li>
               <li><a href="/rentalProcess">Rental Process</a></li>
-              <li><a href="/cart">Cart </a>
+              <li><a href="/cart">Cart 
                 <div class="cart-icon">
                   <a href="/cart">
                       <i class="fa fa-shopping-cart"></i> 
                       <span class="cart-count"><%= cartCount %></span>
                   </a>
-              </div></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
+              </div>
+              </a></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
               <li><a href="#contact">Contact</a></li>
+              <li>
+                <% if (loginSession) { %>
+                  <a href="/Edit_information">Edit_information</a>
+                <% } else { %>
+                  <a href="/login">Login</a>
+                <% } %>
+              </li>
             </ul>
           </nav>
-      </div>
+        </div>
+        
 
       <!-- Hero Section -->
       <section class="hero">
