@@ -14,13 +14,14 @@
             <% if (cart.length > 0) { %>
                 <p class="item-count">You have <%= cart.length %> item(s) in your cart.</p>
                 <% cart.forEach(item => { %>
-                    <div class="cart-item">
+                    <div class="cart-item" data-id="<%= item.camera_id %>">
                         <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
                             <div class="quantity">
                                 <button class="decrease" data-id="<%= item.camera_id %>">-</button>
-                                <input type="text" class="quantity-input" value="<%= item.rental_days %>" readonly>
+                                <!-- ลบ readonly ออกจากช่อง input -->
+                                <input type="number" class="quantity-input" value="<%= item.rental_days %>">
                                 <button class="increase" data-id="<%= item.camera_id %>">+</button>
                             </div>
                         </div>
@@ -29,13 +30,13 @@
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
                             <button type="button" class="remove-btn" data-id="<%= item.camera_id %>">Remove</button>
                         </form>
-
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
                 <p>Your cart is empty.</p>
             <% } %>
+
             <div class="summary">
                 <h2>Summary</h2>
                 <div class="summary-item">
@@ -47,37 +48,86 @@
                 </form>
             </div>
             
-            <script>
-                document.querySelectorAll('.remove-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const cameraId = this.getAttribute('data-id');
-                        
-                        // Send AJAX request to remove item from cart and database
-                        fetch('/removeFromCart', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ camera_id: cameraId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Remove the item from the front-end
-                                const itemElement = document.querySelector(`.cart-item[data-id="${cameraId}"]`);
-                                itemElement.remove();
-                                // Optionally update the item count
-                                const itemCount = document.querySelector('.item-count');
-                                const newItemCount = parseInt(itemCount.innerText.split(' ')[2]) - 1;
-                                itemCount.innerText = `You have ${newItemCount} item(s) in your cart.`;
-                            } else {
-                                alert('Failed to remove item from cart.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-            </script>
-            
+        </div>
+    </div>
+
+    <script>
+            // ปุ่มลดจำนวนสินค้า (-)
+        document.querySelectorAll('.decrease').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-id');
+                const quantityInput = this.nextElementSibling;
+                let quantity = parseInt(quantityInput.value);
+
+                // ตรวจสอบว่า quantity เป็นตัวเลขที่ถูกต้อง
+                if (quantity > 1) {
+                    quantity--; // ลดจำนวน
+                }
+
+                // อัปเดตจำนวนใน input
+                quantityInput.value = quantity;
+                updateTotalPrice(itemId, quantity); // อัปเดตราคาหลังจากลดจำนวน
+            });
+        });
+
+        // ปุ่มเพิ่มจำนวนสินค้า (+)
+        document.querySelectorAll('.increase').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-id');
+                const quantityInput = this.previousElementSibling;
+                let quantity = parseInt(quantityInput.value);
+
+                // ตรวจสอบว่า quantity เป็นตัวเลขที่ถูกต้อง
+                if (!isNaN(quantity)) {
+                    quantity++; // เพิ่มจำนวน
+                }
+
+                // อัปเดตจำนวนใน input
+                quantityInput.value = quantity;
+                updateTotalPrice(itemId, quantity); // อัปเดตราคาหลังจากเพิ่มจำนวน
+            });
+        });
+
+        function updateTotalPrice(itemId, quantity) {
+            const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
+            if (!itemElement) return;
+
+            const priceElement = itemElement.querySelector('.price');
+            let priceText = priceElement.innerText.replace(" บาท", "").trim();
+            const pricePerItem = parseFloat(priceText); // ใช้ parseFloat เพื่อรองรับราคาทศนิยม
+
+            // ตรวจสอบว่า pricePerItem เป็นตัวเลขที่ถูกต้อง
+            if (isNaN(pricePerItem)) {
+                console.error("Invalid price:", priceText);
+                return;
+            }
+
+            const totalPrice = pricePerItem * quantity;
+            priceElement.innerText = `${totalPrice} บาท`;
+
+            updateSummary(); // อัปเดตราคารวมทั้งหมด
+        }
+
+        // ฟังก์ชันอัปเดตราคารวม
+        function updateSummary() {
+            let newTotal = 0;
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const priceElement = item.querySelector('.price');
+                let priceText = priceElement.innerText.replace(" บาท", "").trim();
+                const price = parseFloat(priceText);
+
+                if (!isNaN(price)) {
+                    newTotal += price;
+                }
+            });
+
+            const totalElement = document.querySelector('.total');
+            if (totalElement) {
+                totalElement.innerText = `${newTotal} บาท`;
+            }
+        }
+
+    </script>
+
 </body>
 </html>
