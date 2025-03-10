@@ -429,14 +429,16 @@ app.post("/updateuser", async (req, res) => {
 //     res.redirect('/cart');
 // });
 app.post('/cart', async (req, res) => {
-    const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
+    const { camera_id } = req.body;
     const UID = req.session.USER;
+
 
     if (!UID || !UID.userId) {
         return res.status(400).send('User is not logged in or invalid session');
     }
 
-    console.log('User Session:', UID);
+
+    console.log('User Session:', UID.userId);
 
     try {
         // ตรวจสอบว่า Users มีอยู่ในระบบหรือไม่
@@ -567,7 +569,7 @@ app.post('/removeFromCart', async (req, res) => {
     const UID = req.session.USER;
 
     console.log("Received camera_id:", camera_id);  // ตรวจสอบว่าได้รับ camera_id จาก client หรือไม่
-    console.log("User session:", UID);  // ตรวจสอบ session ของผู้ใช้
+    console.log("User session:", UID.userId);  // ตรวจสอบ session ของผู้ใช้
 
     // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
     if (!UID || !UID.userId) {
@@ -582,17 +584,18 @@ app.post('/removeFromCart', async (req, res) => {
         console.log("Cart data:", cart);  // แสดงข้อมูลที่ได้รับจาก API
 
         // ตรวจสอบว่ามีสินค้าในตะกร้าที่ตรงกับ camera_id ที่ต้องการลบหรือไม่
-        const itemToDelete = cart.find(item => item.camera_id === camera_id);
+        const itemToDelete = cart.filter(item => item.camera_id == camera_id);
 
-        console.log("Item to delete:", itemToDelete);  // แสดงข้อมูลที่พบจากการค้นหา
 
         if (!itemToDelete) {
             console.log('Item not found in cart');
             return res.status(404).json({ error: 'Item not found in cart' });
         }
 
+        console.log("\n\nItem to delete:", itemToDelete);  // แสดงข้อมูลที่พบจากการค้นหา
+
         // ลบข้อมูลจากฐานข้อมูล
-        const deletedRental = await Rental.deleteOne({ camera_id: camera_id });
+        const deletedRental = await axios.delete(base_url + '/rental/' + camera_id + "/" + UID.userId);
 
         if (deletedRental.deletedCount === 0) {
             return res.status(404).json({ error: 'Item not found in rental' });
@@ -703,6 +706,6 @@ app.get('/logout', (req, res) => {
 
 
 
-app.listen(5000, () => {
+app.listen(5500, () => {
     console.log('Server started on http://localhost:5000');
     });
