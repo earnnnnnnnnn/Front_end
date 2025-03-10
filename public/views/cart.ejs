@@ -35,7 +35,6 @@
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
                 <p>Your cart is empty.</p>
-                <a href="/" class="back">Continue Shopping</a>
             <% } %>
             <div class="summary">
                 <h2>Summary</h2>
@@ -49,43 +48,36 @@
             </div>
             
             <script>
-                document.querySelectorAll('.increase').forEach(button => {
-                    button.addEventListener('click', function() {
-                        updateCartQuantity(this.dataset.id, 1);
-                    });
-                });
-            
-                document.querySelectorAll('.decrease').forEach(button => {
-                    button.addEventListener('click', function() {
-                        updateCartQuantity(this.dataset.id, -1);
-                    });
-                });
                 document.querySelectorAll('.remove-btn').forEach(button => {
                     button.addEventListener('click', function() {
-                        const camera_id = this.dataset.id;
+                        const cameraId = this.getAttribute('data-id');
+                        
+                        // Send AJAX request to remove item from cart and database
                         fetch('/removeFromCart', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ camera_id })
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ camera_id: cameraId })
                         })
                         .then(response => response.json())
-                        .then(data => location.reload());
+                        .then(data => {
+                            if (data.success) {
+                                // Remove the item from the front-end
+                                const itemElement = document.querySelector(`.cart-item[data-id="${cameraId}"]`);
+                                itemElement.remove();
+                                // Optionally update the item count
+                                const itemCount = document.querySelector('.item-count');
+                                const newItemCount = parseInt(itemCount.innerText.split(' ')[2]) - 1;
+                                itemCount.innerText = `You have ${newItemCount} item(s) in your cart.`;
+                            } else {
+                                alert('Failed to remove item from cart.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                     });
                 });
-
-            
-                function updateCartQuantity(camera_id, change) {
-                    fetch('/updateCart', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ camera_id, quantity: change })
-                    })
-                    .then(response => response.json())
-                    .then(data => location.reload());
-                }
             </script>
             
-    
-
 </body>
 </html>
