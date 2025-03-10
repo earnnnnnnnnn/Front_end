@@ -15,7 +15,10 @@
                 <p class="item-count">You have <%= cart.length %> item(s) in your cart.</p>
                 <% cart.forEach(item => { %>
                     <div class="cart-item">
-                        <img src="/image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
+                        <p>
+                            <%= item.cameraimg%>
+                        </p>
+                        <img src="../image/<%= item.cameraimg%>" alt="<%= item.cameraname %>">
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
                             <div class="quantity">
@@ -42,8 +45,9 @@
             <h2>Summary</h2>
             <div class="summary-item">
                 <span>Total:</span>
-                <span class="total"><%= totalPrice %> บาท</span>
+                <span class="total"><%= totalPrice %> บาท</span> <!-- แสดง totalPrice ที่ส่งมาจาก backend -->
             </div>
+            
             <form action="/paymentfrom" method="POST">
                 <button type="submit" class="checkout">Proceed to Checkout</button>
             </form>
