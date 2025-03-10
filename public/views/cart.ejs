@@ -48,33 +48,62 @@
             </div>
             
             <script>
+                // ตรวจสอบและจัดการกับปุ่มลดจำนวนสินค้า (-)
+                document.querySelectorAll('.decrease').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const quantityInput = this.nextElementSibling;  // หาช่อง input ที่เป็นจำนวนสินค้า
+                        let quantity = parseInt(quantityInput.value);  // แปลงค่าที่อ่านมาเป็นตัวเลข
+            
+                        if (isNaN(quantity) || quantity <= 1) {
+                            quantity = 1;  // ถ้าค่าเป็น NaN หรือ 0 หรือ < 1 ให้กำหนดเป็น 1
+                        } else {
+                            quantity--;  // ลดจำนวนสินค้า
+                        }
+            
+                        quantityInput.value = quantity;  // อัปเดตช่อง input
+                        updateTotalPrice(this.getAttribute('data-id'), quantity);  // อัปเดตราคาหากต้องการ
+                    });
+                });
+            
+                // ตรวจสอบและจัดการกับปุ่มเพิ่มจำนวนสินค้า (+)
+                document.querySelectorAll('.increase').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const quantityInput = this.previousElementSibling;  // หาช่อง input ที่เป็นจำนวนสินค้า
+                        let quantity = parseInt(quantityInput.value);  // แปลงค่าที่อ่านมาเป็นตัวเลข
+            
+                        if (isNaN(quantity)) {
+                            quantity = 1;  // ถ้าเป็น NaN ให้เริ่มต้นที่ 1
+                        } else {
+                            quantity++;  // เพิ่มจำนวนสินค้า
+                        }
+            
+                        quantityInput.value = quantity;  // อัปเดตช่อง input
+                        updateTotalPrice(this.getAttribute('data-id'), quantity);  // อัปเดตราคาหากต้องการ
+                    });
+                });
+            
+                // ฟังก์ชันที่ใช้สำหรับอัปเดตราคา
+                function updateTotalPrice(itemId, quantity) {
+                    // คุณสามารถเพิ่มการคำนวณราคาตามจำนวนสินค้าได้ที่นี่
+                    const priceElement = document.querySelector(`.cart-item[data-id="${itemId}"] .price`);
+                    const pricePerItem = parseInt(priceElement.innerText.replace(" บาท", ""));
+                    const totalPrice = pricePerItem * quantity;
+            
+                    priceElement.innerText = `${totalPrice} บาท`;
+                }
+            
+                // ลบสินค้าออกจากตะกร้า
                 document.querySelectorAll('.remove-btn').forEach(button => {
                     button.addEventListener('click', function() {
-                        const cameraId = this.getAttribute('data-id');
-                        
-                        // Send AJAX request to remove item from cart and database
-                        fetch('/removeFromCart', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ camera_id: cameraId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Remove the item from the front-end
-                                const itemElement = document.querySelector(`.cart-item[data-id="${cameraId}"]`);
-                                itemElement.remove();
-                                // Optionally update the item count
-                                const itemCount = document.querySelector('.item-count');
-                                const newItemCount = parseInt(itemCount.innerText.split(' ')[2]) - 1;
-                                itemCount.innerText = `You have ${newItemCount} item(s) in your cart.`;
-                            } else {
-                                alert('Failed to remove item from cart.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                        const itemId = this.getAttribute('data-id');
+                        // ลบสินค้าจากหน้าเว็บ
+                        const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
+                        itemElement.remove();
+            
+                        // อัพเดตจำนวนสินค้าที่เหลือในตะกร้า
+                        const itemCount = document.querySelector('.item-count');
+                        const newItemCount = parseInt(itemCount.innerText.split(' ')[2]) - 1;
+                        itemCount.innerText = `You have ${newItemCount} item(s) in your cart.`;
                     });
                 });
             </script>
