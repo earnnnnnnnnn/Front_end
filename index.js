@@ -379,23 +379,22 @@ app.post("/updateuser", async (req, res) => {
 //         const cartResponse = await axios.get(base_url + '/rental');
 //         // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
 //         const cart = cartResponse.data.filter(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
-        
+//         console.log(cart);  // ตรวจสอบข้อมูลที่ได้จาก API
 //         // ถ้าไม่พบ cart items สำหรับผู้ใช้
 //         if (!cart || cart.length === 0) {
 //             return res.status(404).send('No cart items found for this user');
 //         }
-
+        
 //         // คำนวณ totalPrice
-//         const totalPrice = cart.reduce((sum, item) => sum + (item.rental_price_per_day * item.rental_days), 0);  // คำนวณราคาทั้งหมด
+//         const totalPrice = cart.reduce((sum, item) => sum + item.rental_price_per_day, 0);  // คำนวณราคาทั้งหมด
         
 //         // ดึงข้อมูลกล้องจาก API /camera
-//         const cameraResponse = await axios.get(base_url + '/camera');
-        
+//         const cameraResponse = await axios.get(base_url + '/camera');      
 //         // ตรวจสอบว่า camera มีข้อมูลหรือไม่
 //         if (!cameraResponse.data || cameraResponse.data.length === 0) {
 //             return res.status(404).send('No camera data found');
 //         }
-
+        
 //         // ส่งข้อมูลที่ดึงมาจาก API ไปแสดงใน view
 //         res.render("cart", { 
 //             cart: cart,  // ข้อมูลตะกร้าของผู้ใช้
