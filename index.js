@@ -325,6 +325,10 @@ app.post("/updateCart", (req, res) => {
     try {
         const { camera_id, quantity } = req.body;
 
+        const user = req.session.USER;
+        if (!user) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
         // ค้นหาสินค้าในตะกร้าที่มี camera_id ตรงกัน
         const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
 
@@ -378,12 +382,15 @@ app.post('/paymentfrom', (req, res) => {
 });
 
 app.get('/payment', (req, res) => {
-    console.log(req.session.USER);  // ตรวจสอบค่าของ USER ใน session
+    // ตรวจสอบว่า req.session.USER มีข้อมูลหรือไม่
+    console.log('User in session:', req.session.USER);  // ลองพิมพ์ค่าของ USER ในคอนโซล
     const user = req.session.USER;
 
     if (user) {
+        // ส่งข้อมูล User ไปยัง paymentfrom.ejs
         res.render('paymentfrom', { User: user });
     } else {
+        // ถ้าไม่มีข้อมูลใน session รีไดเร็กต์ไปที่หน้า login
         res.redirect('/login');
     }
 });
