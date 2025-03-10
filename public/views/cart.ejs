@@ -27,8 +27,9 @@
                         <p class="price"><%= item.total_price %> บาท</p>
                         <form action="/removeFromCart" method="POST">
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
-                            <button type="submit">Remove</button>
+                            <button type="button" class="remove-btn" data-id="<%= item.camera_id %>">Remove</button>
                         </form>
+
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
@@ -59,6 +60,19 @@
                         updateCartQuantity(this.dataset.id, -1);
                     });
                 });
+                document.querySelectorAll('.remove-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const camera_id = this.dataset.id;
+                        fetch('/removeFromCart', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ camera_id })
+                        })
+                        .then(response => response.json())
+                        .then(data => location.reload());
+                    });
+                });
+
             
                 function updateCartQuantity(camera_id, change) {
                     fetch('/updateCart', {
