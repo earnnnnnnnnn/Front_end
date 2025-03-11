@@ -253,6 +253,11 @@ app.get("/cart", async (req, res) => {
 });
 
 
+const addHours = (date, hours) => {
+    const newDate = new Date(date);
+    newDate.setHours(newDate.getHours() + hours);
+    return newDate;
+};
 
 app.post('/cart', async (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
@@ -272,23 +277,27 @@ app.post('/cart', async (req, res) => {
 
         try {
             const startDate = new Date();
-            startDate.setHours(12, 0, 0, 0);   // ใช้เวลาปัจจุบันจริง ๆ
+            startDate.setHours(12, 0, 0, 0); // ใช้เวลาปัจจุบัน
             const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 3); // บวกไป 3 วัน
-            
-            const formattedStartDate = startDate.toISOString().replace('T', ' ').split('.')[0];
-            const formattedEndDate = endDate.toISOString().replace('T', ' ').split('.')[0];
+            endDate.setDate(startDate.getDate() + 3); // เพิ่ม 3 วัน
+
+            // แปลงเวลาเป็น UTC+7
+            const startDateUTC7 = addHours(startDate, 7);
+            const endDateUTC7 = addHours(endDate, 7);
+
+            const formatDate = (date) =>
+                date.toISOString().replace('T', ' ').split('.')[0]; // "YYYY-MM-DD HH:mm:ss"
 
             await axios.post(base_url + '/rental', {
-                start_date: formattedStartDate,
-                end_date: formattedEndDate,
+                start_date: formatDate(startDateUTC7),
+                end_date: formatDate(endDateUTC7),
                 total_price: rental_price_per_day * 3,
                 status: 'available',
                 users_id: UID.userId,
                 camera_id: camera_id
             });
 
-            console.log('Item added to database:', formattedStartDate, formattedEndDate);
+            console.log('Item added to database:', formatDate(startDateUTC7), formatDate(endDateUTC7));
         } catch (error) {
             console.error("Error adding item to the database:", error.response ? error.response.data : error.message);
             return res.status(500).send("Error adding item to the database");
@@ -297,6 +306,8 @@ app.post('/cart', async (req, res) => {
 
     res.redirect('/cart');
 });
+
+
 
 
 app.post('/cart', (req, res) => {
@@ -320,12 +331,9 @@ app.post('/cart', (req, res) => {
 app.post("/removeFromCart", async (req, res) => {
     try {
         const { camera_id } = req.body;
+        const userId = req.session.USER.userId
 
-        // ลบสินค้าออกจากตะกร้าใน session โดยใช้ camera_id
-        req.session.cart = req.session.cart.filter(item => item.camera_id !== camera_id);
-
-        // ลบข้อมูลจากฐานข้อมูล /rental โดยใช้ camera_id
-        await axios.delete(base_url + `/rental/${camera_id}`);
+        await axios.delete(base_url + `/rental/${camera_id}/${userId}`);
 
         // รีไดเร็กต์กลับไปที่หน้า cart
         res.redirect("/cart");
