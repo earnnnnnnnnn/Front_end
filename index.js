@@ -374,8 +374,6 @@ app.post("/updateCart", (req, res) => {
 
 
 
-
-
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
