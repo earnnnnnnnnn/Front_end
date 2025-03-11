@@ -302,19 +302,28 @@ app.post('/updateCart', async (req, res) => {
     const { camera_id, quantity } = req.body;
     const UID = req.session.USER;
 
+    // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
     if (!UID || !UID.userId) {
         return res.status(400).json({ error: 'User not logged in' });
     }
 
+    // แสดงค่าของ camera_id และ quantity ที่ได้รับ
+    console.log(`Updating cart: camera_id = ${camera_id}, quantity = ${quantity}`);
+
     try {
+        // ส่งคำขอ PATCH ไปยัง API
         const response = await axios.patch(base_url + `/rental/${camera_id}`, { rental_days: quantity });
+
+        // ตรวจสอบผลลัพธ์จาก API
+        console.log('Response from update:', response.data);
+
         res.json({ success: true });
     } catch (error) {
+        // หากเกิดข้อผิดพลาดในการอัปเดต
         console.error("Error updating cart:", error);
         res.status(500).json({ error: "Failed to update cart" });
     }
 });
-
 
 
 // Route to remove item from the cart
@@ -390,6 +399,8 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send('Error');
     }
 });
+
+
 
 
 app.get("/rentalProcess", (req, res) => {

@@ -10,46 +10,31 @@
     <div class="container">
         <h2>Report Table (user -> rental -> return)</h2>
         <table>
-            <thead>
-                <tr>
-                    <th>user_id</th>
-                    <th>username</th>
-                    <th>email</th>
-                    <th>rental_id</th>
-                    <th>rental_start_date</th>
-                    <th>rental_end_date</th>
-                    <th>total_price</th>
-                    <th>rental_status</th>
-                    <th>return_id</th>
-                    <th>return_date</th>
-                    <th>return_condition</th>
-                    <th>extra_charge</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% users.forEach(function(user) { %>
-                    <% rentals.forEach(function(rental) { %>
-                        <% returns.forEach(function(returnItem) { %>
-                            <% if (rental.user_id === user.id && rental.id === returnItem.rental_id) { %>
-                                <tr>
-                                    <td><%= user.id %></td>
-                                    <td><%= user.username %></td>
-                                    <td><%= user.email %></td>
-                                    <td><%= rental.id %></td>
-                                    <td><%= rental.rental_start_date %></td>
-                                    <td><%= rental.rental_end_date %></td>
-                                    <td><%= rental.total_price %></td>
-                                    <td><%= rental.rental_status %></td>
-                                    <td><%= returnItem.id %></td>
-                                    <td><%= returnItem.return_date %></td>
-                                    <td><%= returnItem.return_condition %></td>
-                                    <td><%= returnItem.extra_charge %></td>
-                                </tr>
-                            <% } %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Rental ID</th>
+                        <th>Return Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(user) { %>
+                        <% rentals.forEach(function(rental) { %>
+                            <% returns.forEach(function(returnItem) { %>
+                                <% if (rental.user_id === user.id && rental.id === returnItem.rental_id) { %>
+                                    <tr>
+                                        <td><%= user.name %></td>
+                                        <td><%= rental.id %></td>
+                                        <td><%= returnItem.return_date %></td>
+                                    </tr>
+                                <% } %>
+                            <% }); %>
                         <% }); %>
                     <% }); %>
-                <% }); %>
-            </tbody>
+                </tbody>
+            </table>
+            
         </table>
     </div>
 </body>
