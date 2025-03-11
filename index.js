@@ -380,16 +380,10 @@ app.get("/create", (req, res) => {
 });
 
 
-
-app.get("/users/:id", async (req, res) => {
-    try{
-        const response = await axios.get(base_url + '/users/' + req.params.id);
-        res.render("paymentfrom", { book: response.data });
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Error');
-    }
+app.get("/order", (req, res) => {
+    res.render("order");
 });
+
 
 
 app.get("/rentalProcess", (req, res) => {
