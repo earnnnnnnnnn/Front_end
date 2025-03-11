@@ -437,6 +437,79 @@ app.get('/logout', (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // เส้นทางสำหรับ Checkout
+// app.post('/checkout', async (req, res) => {
+//     const { end_date } = req.body;  // รับค่า end_date ที่ผู้ใช้เลือกจากฟอร์ม
+    
+//     const UID = req.session.USER;  // ตรวจสอบว่า session ผู้ใช้มีข้อมูลหรือไม่
+
+//     if (!UID || !UID.userId) {
+//         return res.status(400).send('User not logged in');
+//     }
+
+//     try {
+//         // ส่งข้อมูลไปยัง API หรือฐานข้อมูลเพื่ออัปเดต end_date ในตาราง Rentals
+//         const response = await axios.patch(base_url + `/rental/updateEndDate/${UID.userId}`, {
+//             end_date: end_date  // ส่งค่า end_date ไปยัง API
+//         });
+
+//         // ถ้าการอัปเดตสำเร็จ
+//         res.redirect('/order-success');  // หรือหน้า success ที่ต้องการ
+//     } catch (error) {
+//         console.error('Error updating end date in Rentals:', error);
+//         res.status(500).send('Error updating end date');
+//     }
+// });
+
+
+// app.put('/rental', async (req, res) => {
+//     const { userId } = req.params;
+//     const { end_date } = req.body;  // รับข้อมูล end_date จากฟอร์ม
+
+//     try {
+//         const conn = await db.getConnection();  // ใช้คำสั่งนี้สำหรับการเชื่อมต่อฐานข้อมูล
+//         const query = "UPDATE Rentals SET end_date = ? WHERE users_id = ?";  // คำสั่ง SQL สำหรับอัปเดต
+//         await conn.execute(query, [end_date, userId]);
+
+//         res.json({ success: true });  // ส่งคำตอบว่าอัปเดตสำเร็จ
+//     } catch (error) {
+//         console.error('Error updating end date:', error);
+//         res.status(500).json({ error: 'Failed to update end date' });
+//     }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.listen(5000, () => {
     console.log('Server started on http://localhost:5000');
     });

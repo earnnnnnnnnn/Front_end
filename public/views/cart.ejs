@@ -40,9 +40,13 @@
                     <span>Total:</span>
                     <span class="total"><%= totalPrice %> บาท</span>
                 </div>
-                <form action="/order" method="POST">
-                    <button type="submit" class="checkout">Proceed to Checkout</button>
-                </form>
+                <!-- ฟอร์ม Checkout -->
+<form action="/order" method="POST" id="checkout-form">
+    <input type="hidden" name="end_date" id="end-date-input">  <!-- input hidden สำหรับส่งข้อมูล end_date -->
+    <button type="submit" class="checkout">Proceed to Checkout</button>
+</form>
+
+                
                 
             </div>
             
@@ -50,6 +54,18 @@
     </div>
 
     <script>
+        // เมื่อผู้ใช้กด "Proceed to Checkout"
+document.querySelector('.checkout').addEventListener('click', function() {
+    const endDateInput = document.querySelector('.return-date');  // เลือก input ของ return date
+    
+    if (endDateInput && endDateInput.value) {
+        const endDate = endDateInput.value;  // รับค่าจาก input return-date
+        document.querySelector('#end-date-input').value = endDate;  // ตั้งค่า end_date ใน hidden input
+    } else {
+        alert('Please select a return date.');
+    }
+});
+
        document.querySelectorAll('.return-date').forEach(input => {
         input.addEventListener('change', function() {
             const itemId = this.getAttribute('data-id');
