@@ -27,10 +27,12 @@
               <li><a href="#contact">Contact</a></li>
               <li>
                 <% if (loginSession) { %>
-                  <a href="/Edit_information">Edit_information</a>
+                  <a href="/Edit_information">Edit Information</a>
                 <% } else { %>
                   <a href="/login">Login</a>
                 <% } %>
+              </li>
+              <li><a href="/logout">Logout</a>
               </li>
             </ul>
           </nav>

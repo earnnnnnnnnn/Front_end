@@ -72,17 +72,6 @@ app.get('/detail', (req, res) => {
     res.render('detail', { cameraId: cameraId });
   });
 
-// app.get("/cart", async (req, res) => {
-//     try{
-//         const camera = await axios.get(base_url + '/camera');
-//         const cameraId = req.query;
-//         console.log (cameraId)
-//         res.render("cart", {});
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
 
 
 
@@ -215,177 +204,6 @@ app.post("/updateuser", async (req, res) => {
     }
 });
 
-// อันที่ได้
-// app.get("/cart", async (req, res) => {
-//     try {
-//         // ตรวจสอบว่า session มีข้อมูลของ USER หรือไม่
-//         const UID = req.session.USER;
-//         if (!UID || !UID.userId) {
-//             return res.status(400).send('User is not logged in or no userId found in session');
-//         }
-
-//         // ดึงข้อมูลจาก API /rental
-//         const cartResponse = await axios.get(base_url + '/rental');
-//         // console.log(cartResponse.data);  // ตรวจสอบข้อมูลที่ได้จาก API     
-//         // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
-//         const cartItems = cartResponse.data.filter(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
-//         console.log(cartItems);  // ตรวจสอบข้อมูลที่ได้จาก API
-//         // ถ้าไม่พบ cart items สำหรับผู้ใช้
-//         if (!cartItems) {
-//             return res.status(404).send('No cart items found for this user');
-//         }
-//         // ดึงข้อมูลกล้องจาก API /camera
-//         const cameraResponse = await axios.get(base_url + '/camera');      
-//         // ตรวจสอบว่า camera มีข้อมูลหรือไม่
-//         if (!cameraResponse.data || cameraResponse.data.length === 0) {
-//             return res.status(404).send('No camera data found');
-//         }
-//         // console.log(cartItems);  // ตรวจสอบข้อมูลใน cartItems
-//         // console.log(cameraResponse.data);  // ตรวจสอบข้อมูลใน camera
-//         // ส่งข้อมูลที่ดึงมาจาก API ไปแสดงใน view
-//         res.render("cart", { 
-//             cartItems: cartItems,  // ข้อมูลตะกร้าของผู้ใช้
-//             cameras: cameraResponse.data  // ข้อมูลกล้องทั้งหมด
-//         });
-//     } catch (err) {
-//         console.error('Error fetching cart data:', err);
-//         // ส่งข้อความ error ไปยัง Frontend
-//         res.render("cart", { cartItems: [], error: 'Error fetching cart data' });
-//     }
-// });
-
-
-
-
-
-//ของฟ้าที่ทำไว้
-// app.get("/cart", (req, res) => {
-//     try {
-//         const cart = req.session.cart || [];  // Assuming the cart is stored in the session
-//         const loginSession = req.session.USER;  // ตรวจสอบว่า session.USER มีค่าหรือไม่ (หมายถึงผู้ใช้ล็อกอิน)
-
-//         // ถ้าผู้ใช้ไม่ได้ล็อกอิน, รีไดเร็กต์ไปยังหน้า login
-//         if (!loginSession) {
-//             return res.redirect('/login');  // ถ้ายังไม่ได้ล็อกอิน ให้ไปที่หน้า login
-//         }
-
-//         // คำนวณราคาทั้งหมดจากตะกร้า
-//         const totalPrice = cart.reduce((sum, item) => sum + parseFloat(item.rental_price_per_day), 0);
-
-//         // ส่งข้อมูลไปที่หน้า cart.ejs
-//         res.render("cart", { cart, totalPrice, loginSession });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Error');
-//     }
-// });
-
-
-
-
-// app.post('/cart', (req, res) => {
-//     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
-
-//     if (!req.session.cart) {
-//         req.session.cart = [];  
-//     }
-
-//     const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
-//     if (!existingItem) {
-       
-//         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
-//     }
-
-    
-//     res.redirect('/cart');
-// });
-
-// app.post("/removeFromCart", (req, res) => {
-//     try {
-//         const { camera_id } = req.body;
-
-//         // ลบสินค้าออกจากตะกร้าใน session โดยใช้ camera_id
-//         req.session.cart = req.session.cart.filter(item => item.camera_id !== camera_id);
-
-//         // รีไดเร็กต์กลับไปที่หน้า cart
-//         res.redirect("/cart");
-//     } catch (err) {
-//         console.error("Error removing item from cart:", err);
-//         res.status(500).send("Error removing item from cart");
-//     }
-// });
-// app.post("/updateCart", (req, res) => {
-//     try {
-//         const { camera_id, quantity } = req.body;
-
-//         const user = req.session.USER;
-//         if (!user) {
-//             return res.status(401).json({ error: 'User not logged in' });
-//         }
-//         // ค้นหาสินค้าในตะกร้าที่มี camera_id ตรงกัน
-//         const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
-
-//         if (cartItem) {
-//             // อัปเดตจำนวนสินค้าในตะกร้า
-//             cartItem.rental_days = parseInt(quantity);  // อัปเดตจำนวน
-//             cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;  // คำนวณราคาทั้งหมด
-//         }
-
-//         // คำนวณราคาใหม่ทั้งหมด
-//         const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
-
-//         // ส่งข้อมูลกลับไปที่ frontend
-//         res.json({ success: true, totalPrice });
-//     } catch (err) {
-//         console.error("Error updating cart:", err);
-//         res.status(500).send("Error updating cart");
-//     }
-// });
-
-
-
-
-
-// app.get("/cart", async (req, res) => {
-//     try {
-//         // ตรวจสอบว่า session มีข้อมูลของ USER หรือไม่
-//         const UID = req.session.USER;
-//         if (!UID || !UID.userId) {
-//             return res.status(400).send('User is not logged in or no userId found in session');
-//         }
-
-//         // ดึงข้อมูลจาก API /rental
-//         const cartResponse = await axios.get(base_url + '/rental');
-//         // ตรวจสอบว่าใน cart มีข้อมูลหรือไม่
-//         const cart = cartResponse.data.filter(user => user.users_id == UID.userId);  // ค้นหาผู้ใช้ที่ตรงกับ userId
-        
-//         // ถ้าไม่พบ cart items สำหรับผู้ใช้
-//         if (!cart || cart.length === 0) {
-//             return res.status(404).send('No cart items found for this user');
-//         }
-
-//         // คำนวณ totalPrice
-//         const totalPrice = cart.reduce((sum, item) => sum + (item.rental_price_per_day * item.rental_days), 0);  // คำนวณราคาทั้งหมด
-
-//         // ดึงข้อมูลกล้องจาก API /camera
-//         const cameraResponse = await axios.get(base_url + '/camera');
-        
-//         // ตรวจสอบว่า camera มีข้อมูลหรือไม่
-//         if (!cameraResponse.data || cameraResponse.data.length === 0) {
-//             return res.status(404).send('No camera data found');
-//         }
-
-//         // ส่งข้อมูลที่ดึงมาจาก API ไปแสดงใน view
-//         res.render("cart", {
-//             cart: cart,  // ข้อมูลตะกร้าของผู้ใช้
-//             cameras: cameraResponse.data,  // ข้อมูลกล้องทั้งหมด
-//             totalPrice: totalPrice  // ส่ง totalPrice ไปยัง ejs
-//         });
-//     } catch (err) {
-//         console.error('Error fetching cart data:', err);
-//         res.render("cart", { cart: [], error: 'Error fetching cart data' });
-//     }
-// });
 
 
 
@@ -429,66 +247,7 @@ app.post('/cart', async (req, res) => {
     res.redirect('/cart');
 });
 
-// app.post('/cart', async (req, res) => {
-//     const { camera_id } = req.body;
-//     const UID = req.session.USER;
 
-//     if (!UID || !UID.userId) {
-//         return res.status(400).send('User is not logged in or invalid session');
-//     }
-
-//     console.log('User Session:', UID.userId);
-
-//     try {
-//         // ตรวจสอบว่า Users มีอยู่ในระบบหรือไม่
-//         const usersResponse = await axios.get(base_url + '/users');
-//         const User = usersResponse.data.find(user => user.users_id === UID.userId);
-
-//         if (!User) {
-//             return res.status(404).send("User not found in database.");
-//         }
-
-//         console.log("User Data:", User);
-
-//         if (!req.session.cart) {
-//             req.session.cart = [];
-//         }
-
-//         // ตรวจสอบว่ามีรายการนี้ในตะกร้าหรือยัง
-//         const cameraapp = await axios.get(base_url + '/camera');
-//         console.log("Camera Data from API:", cameraapp.data);  // พิมพ์ข้อมูลทั้งหมดจาก API /camera
-
-//         const existingItem = cameraapp.data.find(item => item.camera_id === camera_id);
-
-//         if (!existingItem) {
-//             console.log(`No camera found with camera_id: ${camera_id}`);
-//             return res.status(404).send("Camera item not found in database.");
-//         }
-
-//         if (!existingItem.rental_price_per_day) {
-//             return res.status(400).send("Rental price per day not available for this camera.");
-//         }
-
-//         console.log("Existing Item:", existingItem);
-
-//         // ส่งข้อมูลการเช่าไปยังฐานข้อมูล
-//         const rentalResponse = await axios.post(base_url + '/rental', {
-//             start_date: new Date(),
-//             end_date: new Date(new Date().setDate(new Date().getDate() + 1)),  // ตั้งค่าให้เช่า 1 วัน
-//             total_price: existingItem.rental_price_per_day,  // ใช้ rental_price_per_day ที่ถูกต้อง
-//             status: 'pending',  // กำหนดสถานะเบื้องต้น
-//             users_id: UID.userId,
-//             camera_id: existingItem.camera_id
-//         });
-
-//         console.log('Item added to rental database:', rentalResponse.data);
-        
-//         res.redirect('/cart');
-//     } catch (error) {
-//         console.error("Error processing cart:", error.response ? error.response.data : error.message);
-//         res.status(500).send("Error adding item to the cart");
-//     }
-// });
 
 
 app.get("/cart", async (req, res) => {
@@ -615,12 +374,6 @@ app.post('/removeFromCart', async (req, res) => {
 
 
 
-
-
-
-
-
-
 app.get("/users/:id", async (req, res) => {
     try{
         const response = await axios.get(base_url + '/users/' + req.params.id);
@@ -646,38 +399,6 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-
-
-app.post('/paymentfrom', (req, res) => {
-    res.render('paymentfrom', { message: 'Proceed to payment' });
-});
-
-// app.get('/payment', (req, res) => {
-//     // ตรวจสอบว่า req.session.USER มีข้อมูลหรือไม่
-//     console.log('User in session:', req.session.USER);  // ลองพิมพ์ค่าของ USER ในคอนโซล
-//     const user = req.session.USER;
-
-//     if (user) {
-//         // ส่งข้อมูล User ไปยัง paymentfrom.ejs
-//         res.render('paymentfrom', { User: user });
-//     } else {
-//         // ถ้าไม่มีข้อมูลใน session รีไดเร็กต์ไปที่หน้า login
-//         res.redirect('/login');
-//     }
-// });
-
-
-
-
-// app.get("/cart", async (req, res) => {
-//     const loginSession = req.session.USER;
-    
-//     const cameras = await axios.get(base_url + '/camera')
-//     const rentals = await axios.get(base_url + '/rental')
-//     const cartItems = rentals.data.filter(rental => rental.users_id == loginSession.userId)
-    
-//     res.render("cart", {cameras: cameras.data, cartItems: cartItems});  
-// });
 
 
 
