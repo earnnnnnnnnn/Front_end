@@ -445,38 +445,37 @@ app.get('/logout', (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-// // เส้นทางสำหรับ Checkout
-// app.post('/checkout', async (req, res) => {
-//     const { end_date } = req.body;  // รับค่า end_date ที่ผู้ใช้เลือกจากฟอร์ม
+app.post('/checkout', async (req, res) => {
+    const { end_date, amount } = req.body;  // รับค่า end_date และ amount
     
-//     const UID = req.session.USER;  // ตรวจสอบว่า session ผู้ใช้มีข้อมูลหรือไม่
+    const UID = req.session.USER;  // ตรวจสอบว่า session ผู้ใช้มีข้อมูลหรือไม่
 
-//     if (!UID || !UID.userId) {
-//         return res.status(400).send('User not logged in');
-//     }
+    if (!UID || !UID.userId) {
+        return res.status(400).send('User not logged in');
+    }
 
-//     try {
-//         // ส่งข้อมูลไปยัง API หรือฐานข้อมูลเพื่ออัปเดต end_date ในตาราง Rentals
-//         const response = await axios.patch(base_url + `/rental/updateEndDate/${UID.userId}`, {
-//             end_date: end_date  // ส่งค่า end_date ไปยัง API
-//         });
+    try {
+        // ส่งข้อมูลไปยัง API หรือฐานข้อมูลเพื่ออัปเดต end_date ในตาราง Rentals
+        const rentalResponse = await axios.patch(base_url + `/rentals${UID.userId}`, {
+            end_date: end_date  // ส่งค่า end_date ไปยัง API
+        });
 
-//         // ถ้าการอัปเดตสำเร็จ
-//         res.redirect('/order-success');  // หรือหน้า success ที่ต้องการ
-//     } catch (error) {
-//         console.error('Error updating end date in Rentals:', error);
-//         res.status(500).send('Error updating end date');
-//     }
-// });
+        // บันทึกข้อมูลในตาราง Payment
+        const paymentResponse = await axios.post(base_url + '/payment', {
+            amount: amount,  // จำนวนเงินที่ต้องการบันทึก
+            rental_id: rentalResponse.data.rental_id,  // รหัสการเช่าจาก Rentals
+            users_id: UID.userId,  // เชื่อมโยงกับผู้ใช้
+
+        });
+
+        // ถ้าการอัปเดตสำเร็จทั้งหมด
+        res.redirect('/order');  // หรือหน้า success ที่ต้องการ
+    } catch (error) {
+        console.error('Error updating end date in Rentals or Payment:', error);
+        res.status(500).send('Error updating end date or processing payment');
+    }
+});
+
 
 
 // app.put('/rental', async (req, res) => {
