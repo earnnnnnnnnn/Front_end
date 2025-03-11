@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-  
+
 * {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
 }
 
 body {
@@ -18,7 +17,10 @@ body {
 
 .container {
     display: flex;
+    flex-direction: row; /* ใช้ flexbox เพื่อจัดเรียงในแนวนอน */
+    justify-content: space-between; /* ให้คอนเทนต์อยู่ฝั่งซ้ายและขวา */
     width: 80%;
+    max-width: 1200px;
     background: white;
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -27,7 +29,7 @@ body {
 
 /* Shopping Cart */
 .cart {
-    width: 65%;
+    width: 70%; /* ตั้งความกว้างให้มีขนาดพอดี */
     padding: 20px;
 }
 
@@ -45,14 +47,16 @@ body {
 .cart-item {
     display: flex;
     align-items: center;
+    flex-direction: row;
+    gap: 15px;
     margin-bottom: 15px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .cart-item img {
     width: 80px;
-    margin-right: 15px;
     border-radius: 5px;
 }
 
@@ -71,25 +75,6 @@ body {
     align-items: center;
 }
 
-.quantity button {
-    background: #f4f4f4;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.quantity button:hover {
-    background-color: #ddd;
-}
-
-.quantity input {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    margin: 0 5px;
-}
-
 .price {
     font-weight: bold;
     margin-right: 10px;
@@ -99,14 +84,14 @@ body {
 .remove {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     color: #ff6f61;
     transition: color 0.3s;
 }
 
 .remove:hover {
-    color: #ff6f61;
+    color: #ff3b2f;
 }
 
 .back {
@@ -115,6 +100,7 @@ body {
     text-decoration: none;
     color: #333;
     font-weight: bold;
+    transition: color 0.3s;
 }
 
 .back:hover {
@@ -123,7 +109,7 @@ body {
 
 /* Summary Section */
 .summary {
-    width: 35%;
+    width: 28%; /* ตั้งความกว้างให้พอดีกับทางขวา */
     background: #f4f4f4;
     padding: 20px;
     border-radius: 10px;
@@ -176,4 +162,38 @@ body {
 
 .checkout:hover {
     background: #ff3b2f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* เปลี่ยนเป็น column บนมือถือ */
+    }
+
+    .cart {
+        width: 100%; /* ขยาย cart ให้เต็มความกว้าง */
+        margin-bottom: 20px;
+    }
+
+    .summary {
+        width: 100%; /* ขยาย summary ให้เต็มความกว้างบนมือถือ */
+    }
+
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-item img {
+        width: 60px;
+    }
+
+    .summary-item select,
+    .summary-item input {
+        width: 100%;
+    }
+
+    .checkout {
+        width: auto;
+    }
 }

@@ -392,8 +392,6 @@ app.get("/users/:id", async (req, res) => {
 });
 
 
-
-
 app.get("/rentalProcess", (req, res) => {
     res.render("rentalProcess");  
 });

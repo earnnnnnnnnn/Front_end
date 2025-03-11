@@ -16,27 +16,24 @@
                 <% cart.forEach(item => { %>
                     <div class="cart-item" data-id="<%= item.camera_id %>">
                         <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
-                        <div class="item-details">
-                            <p class="item-name"><%= item.cameraname %></p>
-                            <div class="quantity">
-                                <button class="decrease" data-id="<%= item.camera_id %>">-</button>
-                                <!-- ลบ readonly ออกจากช่อง input -->
-                                <input type="number" class="quantity-input" value="<%= item.rental_days %>">
-                                <button class="increase" data-id="<%= item.camera_id %>">+</button>
+                            <div class="item-details">
+                                <p class="item-name"><%= item.cameraname %></p>
+                                <label>Return Date:</label>
+                                <input type="date" class="return-date" data-id="<%= item.camera_id %>" min="<%= new Date().toISOString().split('T')[0] %>">
                             </div>
-                        </div>
-                        <p class="price"><%= item.total_price %> บาท</p>
-                        <form action="/removeFromCart" method="POST">
-                            <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
-                            <button type="button" class="remove-btn" data-id="<%= item.camera_id %>">Remove</button>
-                        </form>
+                            <p class="price" data-price="<%= item.price_per_day %>"><%= item.price_per_day %> บาท</p>
+
+                            <form action="/cart" method="POST" id="form-<%= item.camera_id %>">
+                                <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
+                                <input type="hidden" name="end_date" class="end-date" value=""> <!-- Initially empty, will be filled by JS -->
+                                <button type="button" class="remove-btn" data-id="<%= item.camera_id %>">Remove</button>
+                            </form>
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
                 <p>Your cart is empty.</p>
             <% } %>
-
             <div class="summary">
                 <h2>Summary</h2>
                 <div class="summary-item">
@@ -52,82 +49,40 @@
     </div>
 
     <script>
-            // ปุ่มลดจำนวนสินค้า (-)
-        document.querySelectorAll('.decrease').forEach(button => {
-            button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-id');
-                const quantityInput = this.nextElementSibling;
-                let quantity = parseInt(quantityInput.value);
+       document.querySelectorAll('.return-date').forEach(input => {
+        input.addEventListener('change', function() {
+            const itemId = this.getAttribute('data-id');
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            const days = Math.max(1, Math.ceil((selectedDate - today) / (1000 * 60 * 60 * 24)));
 
-                // ตรวจสอบว่า quantity เป็นตัวเลขที่ถูกต้อง
-                if (quantity > 1) {
-                    quantity--; // ลดจำนวน
-                }
+            
+            const form = document.querySelector(`#form-${itemId}`);
+            const endDateInput = form.querySelector('.end-date');
+            endDateInput.value = selectedDate.toISOString().split('T')[0]; 
 
-                // อัปเดตจำนวนใน input
-                quantityInput.value = quantity;
-                updateTotalPrice(itemId, quantity); // อัปเดตราคาหลังจากลดจำนวน
-            });
+            updateTotalPrice(itemId, days); 
         });
+    });
 
-        // ปุ่มเพิ่มจำนวนสินค้า (+)
-        document.querySelectorAll('.increase').forEach(button => {
-            button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-id');
-                const quantityInput = this.previousElementSibling;
-                let quantity = parseInt(quantityInput.value);
+    function updateTotalPrice(itemId, days) {
+        const item = document.querySelector(`#cart-item-${itemId}`);
+        const pricePerDay = parseFloat(item.dataset.price);
+        const totalPrice = pricePerDay * days;
+        item.querySelector('.total-price').textContent = `${totalPrice} บาท`;
+    }
 
-                // ตรวจสอบว่า quantity เป็นตัวเลขที่ถูกต้อง
-                if (!isNaN(quantity)) {
-                    quantity++; // เพิ่มจำนวน
-                }
-
-                // อัปเดตจำนวนใน input
-                quantityInput.value = quantity;
-                updateTotalPrice(itemId, quantity); // อัปเดตราคาหลังจากเพิ่มจำนวน
-            });
-        });
-
-        function updateTotalPrice(itemId, quantity) {
-            const itemElement = document.querySelector(`.cart-item[data-id="${itemId}"]`);
-            if (!itemElement) return;
-
-            const priceElement = itemElement.querySelector('.price');
-            let priceText = priceElement.innerText.replace(" บาท", "").trim();
-            const pricePerItem = parseFloat(priceText); // ใช้ parseFloat เพื่อรองรับราคาทศนิยม
-
-            // ตรวจสอบว่า pricePerItem เป็นตัวเลขที่ถูกต้อง
-            if (isNaN(pricePerItem)) {
-                console.error("Invalid price:", priceText);
-                return;
-            }
-
-            const totalPrice = pricePerItem * quantity;
-            priceElement.innerText = `${totalPrice} บาท`;
-
-            updateSummary(); // อัปเดตราคารวมทั้งหมด
-        }
-
-        // ฟังก์ชันอัปเดตราคารวม
         function updateSummary() {
             let newTotal = 0;
-            document.querySelectorAll('.cart-item').forEach(item => {
-                const priceElement = item.querySelector('.price');
-                let priceText = priceElement.innerText.replace(" บาท", "").trim();
-                const price = parseFloat(priceText);
-
+            document.querySelectorAll('.cart-item .price').forEach(priceElement => {
+                const price = parseFloat(priceElement.innerText.replace(' บาท', ''));
                 if (!isNaN(price)) {
                     newTotal += price;
                 }
             });
-
-            const totalElement = document.querySelector('.total');
-            if (totalElement) {
-                totalElement.innerText = `${newTotal} บาท`;
-            }
+            document.querySelector('.total').innerText = `${newTotal} บาท`;  // อัปเดตยอดรวม
         }
 
     </script>
-
 </body>
 </html>
