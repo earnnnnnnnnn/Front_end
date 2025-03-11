@@ -43,6 +43,19 @@
     cursor: pointer;
     border-radius: 8px;
   }
+  .alert-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+    display: none; /* ซ่อนข้อความเริ่มต้น */
+    z-index: 999;
+}
 
 
   /* Header */
