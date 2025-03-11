@@ -222,15 +222,13 @@ app.post('/cart', async (req, res) => {
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
 
         try {
-            // ใช้โซนเวลาของประเทศไทย
-            const now = new Date();
-            const startDate = new Date(now.toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
+            const startDate = new Date();
+            startDate.setHours(12, 0, 0, 0);   // ใช้เวลาปัจจุบันจริง ๆ
             const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 3);  // บวก 3 วัน
-
+            endDate.setDate(startDate.getDate() + 3); // บวกไป 3 วัน
+            
             const formattedStartDate = startDate.toISOString().replace('T', ' ').split('.')[0];
             const formattedEndDate = endDate.toISOString().replace('T', ' ').split('.')[0];
-
 
             await axios.post(base_url + '/rental', {
                 start_date: formattedStartDate,
@@ -250,7 +248,6 @@ app.post('/cart', async (req, res) => {
 
     res.redirect('/cart');
 });
-
 
 
 
