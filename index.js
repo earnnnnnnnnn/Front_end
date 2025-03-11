@@ -166,7 +166,7 @@ app.get("/Edit_information", async (req, res) => {
         console.log(UID)
         const Users = await axios.get(base_url + '/users');
         const User = Users.data.find(Users => Users.users_id == UID.userId);
-        console.log(User)
+        // console.log(User)
         res.render("Edit_information",{ User: User})
 
     } catch (err) {
