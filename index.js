@@ -389,11 +389,24 @@ app.get("/create", (req, res) => {
 });
 
 
-app.get("/order", (req, res) => {
-    res.render("order");
+app.post("/order", async (req, res) => {
+    try {
+        // Fetch data for users, rentals, and returns
+        const usersResponse = await axios.get(base_url + '/users');
+        const rentalsResponse = await axios.get(base_url + '/rentals');
+        const returnsResponse = await axios.get(base_url + '/returns');
+        
+        const users = usersResponse.data;
+        const rentals = rentalsResponse.data;
+        const returns = returnsResponse.data;
+
+        // Pass the data to the 'order' view
+        res.render("order", { users, rentals, returns });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching data for the order report');
+    }
 });
-
-
 
 
 app.get("/rentalProcess", (req, res) => {

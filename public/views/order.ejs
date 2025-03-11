@@ -10,31 +10,34 @@
     <div class="container">
         <h2>Report Table (user -> rental -> return)</h2>
         <table>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>Rental ID</th>
-                        <th>Return Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% users.forEach(function(user) { %>
-                        <% rentals.forEach(function(rental) { %>
-                            <% returns.forEach(function(returnItem) { %>
-                                <% if (rental.user_id === user.id && rental.id === returnItem.rental_id) { %>
-                                    <tr>
-                                        <td><%= user.name %></td>
-                                        <td><%= rental.id %></td>
-                                        <td><%= returnItem.return_date %></td>
-                                    </tr>
-                                <% } %>
-                            <% }); %>
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Rental ID</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (users && rentals && returns) { %>
+                    <% users.forEach(user => { %>
+                        <% let userRentals = rentals.filter(rental => rental.user_id === user.id); %>
+                        <% userRentals.forEach(rental => { %>
+                            <% let returnItem = returns.find(r => r.rental_id === rental.id); %>
+                            <% if (returnItem) { %>
+                                <tr>
+                                    <td><%= user.name %></td>
+                                    <td><%= rental.id %></td>
+                                    <td><%= returnItem.return_date %></td>
+                                </tr>
+                            <% } %>
                         <% }); %>
                     <% }); %>
-                </tbody>
-            </table>
-            
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No data available</td>
+                    </tr>
+                <% } %>
+            </tbody>
         </table>
     </div>
 </body>
