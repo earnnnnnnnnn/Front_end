@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,135 +16,76 @@
                 <% cart.forEach(item => { %>
                     <div class="cart-item" data-id="<%= item.camera_id %>">
                         <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
-                            <div class="item-details">
-                                <p class="item-name"><%= item.cameraname %></p>
-                                <label>Return Date:</label>
-                                <input type="date" class="return-date" data-id="<%= item.camera_id %>" min="<%= new Date().toISOString().split('T')[0] %>">
-                            </div>
-                            <p class="price" data-price="<%= item.price_per_day %>"><%= item.price_per_day %> บาท</p>
+                        <div class="item-details">
+                            <p class="item-name"><%= item.cameraname %></p>
+                            <p>Start Date: <span class="start-date"></span></p>
+                            <p>End Date: <span class="end-date"></span></p>
+                        </div>
+                        <p class="price" data-price="<%= item.price_per_day %>"><%= item.price_per_day %> บาท</p>
 
-                            <form action="/removeFromCart" method="POST">
-                                <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
-                                <button type="submit" class="remove-btn">Remove</button>
-                            </form>
-     
+                        <form action="/removeFromCart" method="POST">
+                            <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
+                            <button type="submit" class="remove-btn">Remove</button>
+                        </form>
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
                 <p>Your cart is empty.</p>
             <% } %>
+            
             <div class="summary">
                 <h2>Summary</h2>
                 <div class="summary-item">
                     <span>Total:</span>
                     <span class="total"><%= totalPrice %> บาท</span>
                 </div>
+                
                 <!-- ฟอร์ม Checkout -->
                 <form action="/order" method="POST" id="checkout-form">
-                    <input type="hidden" name="end_date" id="end-date-input">  <!-- input hidden สำหรับส่งข้อมูล end_date -->
+                    <input type="hidden" name="end_date" id="end-date-input">
                     <button type="submit" class="checkout">Proceed to Checkout</button>
                 </form>
-                         
-                
             </div>
-            
         </div>
     </div>
 
     <script>
-        // เมื่อผู้ใช้กด "Proceed to Checkout"
-    document.querySelector('.checkout').addEventListener('click', function() {
-        const endDateInput = document.querySelector('.return-date');  // เลือก input ของ return date
-        
-        if (endDateInput && endDateInput.value) {
-            const endDate = endDateInput.value;  // รับค่าจาก input return-date
-            document.querySelector('#end-date-input').value = endDate;  // ตั้งค่า end_date ใน hidden input
-        } else {
-            alert('Please select a return date.');
-        }
-    });
-    document.querySelectorAll('.remove-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // ป้องกันไม่ให้ฟอร์มถูกส่ง
-            const cameraId = this.getAttribute('data-id'); // ดึง id ของกล้องจาก data-id
-            const form = document.querySelector(`#form-${cameraId}`); // เลือกฟอร์มที่เกี่ยวข้อง
-            form.submit(); // ส่งฟอร์มไปที่เซิร์ฟเวอร์เพื่อทำการลบ
-        });
-    });
-
-
-    document.querySelectorAll('.return-date').forEach(input => {
-        input.addEventListener('change', function() {
-            const itemId = this.getAttribute('data-id');
-            const selectedDate = new Date(this.value);
+        // กำหนดวันที่เริ่มต้นและวันที่สิ้นสุด
+        document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
-            const days = Math.max(1, Math.ceil((selectedDate - today) / (1000 * 60 * 60 * 24)));
+            const startDate = today.toISOString().split('T')[0];
 
-            
-            const form = document.querySelector(`#form-${itemId}`);
-            const endDateInput = form.querySelector('.end-date');
-            endDateInput.value = selectedDate.toISOString().split('T')[0]; 
+            const endDate = new Date();
+            endDate.setDate(today.getDate() + 3);
+            const formattedEndDate = endDate.toISOString().split('T')[0];
 
-            updateTotalPrice(itemId, days); 
+            document.querySelectorAll('.start-date').forEach(span => span.innerText = startDate);
+            document.querySelectorAll('.end-date').forEach(span => span.innerText = formattedEndDate);
+            document.querySelector('#end-date-input').value = formattedEndDate;
         });
-    });
 
-    function updateTotalPrice() {
-        let total = 0;
-        document.querySelectorAll('.cart-item').forEach(item => {
-            const price = parseFloat(item.querySelector('.price').innerText.replace(' บาท', ''));
-            const quantity = parseInt(item.querySelector('.quantity-input').value);
-            total += price * quantity;
+        // ตรวจสอบก่อน Checkout
+        document.querySelector('.checkout').addEventListener('click', function(event) {
+            if (!document.querySelector('#end-date-input').value) {
+                alert('เกิดข้อผิดพลาดในการกำหนดวันที่ กรุณาลองใหม่');
+                event.preventDefault();
+            }
         });
-            
-        document.querySelector('.total').innerText = total + ' บาท';
-        }
-    
-        // Function to update cart quantity in the backend
-        function updateCartQuantity(input) {
-            const camera_id = input.closest('.cart-item').querySelector('input[name="camera_id"]').value;
-            const quantity = input.value;
-    
-            // Send updated quantity to the backend using fetch
-            fetch('/updateCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ camera_id, quantity })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Cart updated:', data);
-            })
-            .catch((error) => {
-                console.error('Error updating cart:', error);
+
+        // อัปเดตราคาทั้งหมด
+        function updateTotalPrice() {
+            let total = 0;
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const price = parseFloat(item.querySelector('.price').innerText.replace(' บาท', ''));
+                total += price * 3;  // คิดราคาเป็น 3 วัน
             });
+
+            document.querySelector('.total').innerText = total + ' บาท';
         }
-        document.querySelectorAll('.remove-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // ป้องกันไม่ให้ฟอร์มถูกส่ง
-            const cameraId = this.closest('form').querySelector('input[name="camera_id"]').value;
-            
-            fetch('/removeFromCart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ camera_id: cameraId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // อัปเดต UI หรือแสดงข้อความหลังจากลบสำเร็จ
-                console.log(data);
-                this.closest('.cart-item').remove();  // ลบไอเทมจาก UI
-            })
-            .catch(error => {
-                console.error('Error removing item:', error);
-            });
-        });
-    });
+        
+        updateTotalPrice();
     </script>
+
 </body>
 </html>

@@ -211,8 +211,12 @@ app.post('/cart', async (req, res) => {
     const UID = req.session.USER;  // ใช้ข้อมูลจาก session
     console.log(UID);
     
+    if (!UID) {
+        return res.status(400).send("User is not logged in.");
+    }
+
     const Users = await axios.get(base_url + '/users');
-    const User = Users.data.find(user => user.users_id === UID.userId);  // ใช้ UID.userId
+    const User = Users.data.find(user => user.users_id === UID.userId);
     console.log(User);
     
     if (!req.session.cart) {
@@ -224,14 +228,18 @@ app.post('/cart', async (req, res) => {
     if (!existingItem) {
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
 
-        // เพิ่มข้อมูลการเช่ากล้องลงในฐานข้อมูลผ่าน API ภายนอก
+        // กำหนดวันที่เริ่มต้นเป็นปัจจุบัน และวันสิ้นสุดเป็นอีก 3 วัน
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(startDate.getDate() + 3); // เพิ่ม 3 วัน
+
         try {
             const response = await axios.post(base_url + '/rental', {
-                start_date: new Date(),
-                end_date: new Date(),
-                total_price: rental_price_per_day,
+                start_date: startDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
+                end_date: endDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
+                total_price: rental_price_per_day * 3, // ราคาคำนวณตาม 3 วัน
                 status: 'available',
-                users_id: UID.userId,  // ใช้ UID.userId แทน
+                users_id: UID.userId,
                 camera_id: camera_id
             });
             console.log('Item added to the database via external API:', response.data);
@@ -241,7 +249,6 @@ app.post('/cart', async (req, res) => {
         }
     }
 
-    // รีไดเร็กต์ไปที่หน้า cart
     res.redirect('/cart');
 });
 
