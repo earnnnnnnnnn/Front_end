@@ -7,6 +7,9 @@
       <title>Document</title>
   </head>
   <body>
+      <div id="alert-message" class="alert-message">
+        Please log in before adding items to the cart!
+    </div>
       <div class="container">
           <div class="logo">
             <img src="../image/logo1.png" alt="Logo">
@@ -25,14 +28,14 @@
               </div>
               </a></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
               <li><a href="#contact">Contact</a></li>
-              <li>
-                <% if (loginSession) { %>
-                  <a href="/Edit_information">Edit Information</a>
-                <% } else { %>
-                  <a href="/login">Login</a>
-                <% } %>
-              </li>
-              <li><a href="/logout">Logout</a></li>
+              <% if (loginSession) { %>
+                <!-- If user is logged in, show 'Edit Information' and 'Logout' -->
+                <li><a href="/Edit_information">Edit Information</a></li>
+                <li><a href="/logout">Logout</a></li>
+              <% } else { %>
+                <!-- If user is not logged in, show 'Login' -->
+                <li><a href="/login">Login</a></li>
+              <% } %>
               <li><a href="/report">report</a></li>
             </ul>
           </nav>
