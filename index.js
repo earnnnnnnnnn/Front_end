@@ -224,7 +224,7 @@ app.post('/cart', async (req, res) => {
         try {
             // ใช้โซนเวลาของประเทศไทย
             const now = new Date();
-            const startDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+            const startDate = new Date(now.toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
             const endDate = new Date(startDate);
             endDate.setDate(startDate.getDate() + 3);  // บวก 3 วัน
 

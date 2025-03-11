@@ -31,6 +31,7 @@
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
+                <a href="/" class="back">Continue Shopping</a>
                 <p>Your cart is empty.</p>
             <% } %>
             
@@ -77,8 +78,14 @@
         function updateTotalPrice() {
             let total = 0;
             document.querySelectorAll('.cart-item').forEach(item => {
-                const price = parseFloat(item.querySelector('.price').innerText.replace(' บาท', ''));
-                total += price * 3;  // คิดราคาเป็น 3 วัน
+                // ดึงราคาแต่ละตัวจาก data-price
+                const pricePerDay = parseFloat(item.querySelector('.price').getAttribute('data-price'));
+                
+                if (!isNaN(pricePerDay)) {
+                    // คำนวณราคาทั้งหมดสำหรับแต่ละกล้อง (ราคา x จำนวนวัน)
+                    const itemTotalPrice = pricePerDay;  // 3 วัน
+                    total += itemTotalPrice;  // รวมราคาของทุกๆ กล้อง
+                }
             });
 
             document.querySelector('.total').innerText = total + ' บาท';
