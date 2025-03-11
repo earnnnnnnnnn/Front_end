@@ -167,8 +167,6 @@ app.get("/Edit_information", async (req, res) => {
 
 
 
-
-// ลงทะเบียนหรืออัพเดตข้อมูลผู้ใช้
 app.post("/updateuser", async (req, res) => {
     const { username, email, password, phone } = req.body;
     const UID = req.session.USER;
@@ -298,79 +296,66 @@ app.get("/cart", async (req, res) => {
     }
 });
 
-app.post('/updateCart', async (req, res) => {
-    const { camera_id, quantity } = req.body;
-    const UID = req.session.USER;
+app.post('/cart', (req, res) => {
+    const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
 
-    // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
-    if (!UID || !UID.userId) {
-        return res.status(400).json({ error: 'User not logged in' });
+    if (!req.session.cart) {
+        req.session.cart = [];  
     }
 
-    // แสดงค่าของ camera_id และ quantity ที่ได้รับ
-    console.log(`Updating cart: camera_id = ${camera_id}, quantity = ${quantity}`);
+    const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
+    if (!existingItem) {
+       
+        req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
+    }
 
+    
+    res.redirect('/cart');
+});
+
+app.post("/removeFromCart", (req, res) => {
     try {
-        // ส่งคำขอ PATCH ไปยัง API
-        const response = await axios.patch(base_url + `/rental/${camera_id}`, { rental_days: quantity });
+        const { camera_id } = req.body;
 
-        // ตรวจสอบผลลัพธ์จาก API
-        console.log('Response from update:', response.data);
+        // ลบสินค้าออกจากตะกร้าใน session โดยใช้ camera_id
+        req.session.cart = req.session.cart.filter(item => item.camera_id !== camera_id);
 
-        res.json({ success: true });
-    } catch (error) {
-        // หากเกิดข้อผิดพลาดในการอัปเดต
-        console.error("Error updating cart:", error);
-        res.status(500).json({ error: "Failed to update cart" });
+        // รีไดเร็กต์กลับไปที่หน้า cart
+        res.redirect("/cart");
+    } catch (err) {
+        console.error("Error removing item from cart:", err);
+        res.status(500).send("Error removing item from cart");
+    }
+});
+app.post("/updateCart", (req, res) => {
+    try {
+        const { camera_id, quantity } = req.body;
+
+        const user = req.session.USER;
+        if (!user) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+        // ค้นหาสินค้าในตะกร้าที่มี camera_id ตรงกัน
+        const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
+
+        if (cartItem) {
+            // อัปเดตจำนวนสินค้าในตะกร้า
+            cartItem.rental_days = parseInt(quantity);  // อัปเดตจำนวน
+            cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;  // คำนวณราคาทั้งหมด
+        }
+
+        // คำนวณราคาใหม่ทั้งหมด
+        const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
+
+        // ส่งข้อมูลกลับไปที่ frontend
+        res.json({ success: true, totalPrice });
+    } catch (err) {
+        console.error("Error updating cart:", err);
+        res.status(500).send("Error updating cart");
     }
 });
 
 
-// Route to remove item from the cart
-app.post('/removeFromCart', async (req, res) => {
-    const { camera_id } = req.body;
-    const UID = req.session.USER;
-
-    console.log("Received camera_id:", camera_id);  // ตรวจสอบว่าได้รับ camera_id จาก client หรือไม่
-    console.log("User session:", UID.userId);  // ตรวจสอบ session ของผู้ใช้
-
-    // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
-    if (!UID || !UID.userId) {
-        return res.status(400).json({ error: 'User not logged in' });
-    }
-
-    try {
-        // ดึงข้อมูลจาก API ที่จัดการกับตะกร้า
-        const cartResponse = await axios.get(base_url + '/rental');
-        const cart = cartResponse.data;
-
-        console.log("Cart data:", cart);  // แสดงข้อมูลที่ได้รับจาก API
-
-        // ตรวจสอบว่ามีสินค้าในตะกร้าที่ตรงกับ camera_id ที่ต้องการลบหรือไม่
-        const itemToDelete = cart.filter(item => item.camera_id == camera_id);
-
-
-        if (!itemToDelete) {
-            console.log('Item not found in cart');
-            return res.status(404).json({ error: 'Item not found in cart' });
-        }
-
-        console.log("\n\nItem to delete:", itemToDelete);  // แสดงข้อมูลที่พบจากการค้นหา
-
-        // ลบข้อมูลจากฐานข้อมูล
-        const deletedRental = await axios.delete(base_url + '/rental/' + camera_id + "/" + UID.userId);
-
-        if (deletedRental.deletedCount === 0) {
-            return res.status(404).json({ error: 'Item not found in rental' });
-        }
-
-        // ส่งคำตอบกลับไปว่า การลบสำเร็จ
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Error removing item from rental:', error);
-        res.status(500).json({ error: 'Failed to remove item from rental' });
-    }
-});
 
 
 

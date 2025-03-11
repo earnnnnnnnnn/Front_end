@@ -23,11 +23,11 @@
                             </div>
                             <p class="price" data-price="<%= item.price_per_day %>"><%= item.price_per_day %> บาท</p>
 
-                            <form action="/cart" method="POST" id="form-<%= item.camera_id %>">
+                            <form action="/removeFromCart" method="POST">
                                 <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
-                                <input type="hidden" name="end_date" class="end-date" value=""> <!-- Initially empty, will be filled by JS -->
-                                <button type="button" class="remove-btn" data-id="<%= item.camera_id %>">Remove</button>
+                                <button type="submit" class="remove-btn">Remove</button>
                             </form>
+     
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
@@ -41,12 +41,11 @@
                     <span class="total"><%= totalPrice %> บาท</span>
                 </div>
                 <!-- ฟอร์ม Checkout -->
-<form action="/order" method="POST" id="checkout-form">
-    <input type="hidden" name="end_date" id="end-date-input">  <!-- input hidden สำหรับส่งข้อมูล end_date -->
-    <button type="submit" class="checkout">Proceed to Checkout</button>
-</form>
-
-                
+                <form action="/order" method="POST" id="checkout-form">
+                    <input type="hidden" name="end_date" id="end-date-input">  <!-- input hidden สำหรับส่งข้อมูล end_date -->
+                    <button type="submit" class="checkout">Proceed to Checkout</button>
+                </form>
+                         
                 
             </div>
             
@@ -55,18 +54,27 @@
 
     <script>
         // เมื่อผู้ใช้กด "Proceed to Checkout"
-document.querySelector('.checkout').addEventListener('click', function() {
-    const endDateInput = document.querySelector('.return-date');  // เลือก input ของ return date
-    
-    if (endDateInput && endDateInput.value) {
-        const endDate = endDateInput.value;  // รับค่าจาก input return-date
-        document.querySelector('#end-date-input').value = endDate;  // ตั้งค่า end_date ใน hidden input
-    } else {
-        alert('Please select a return date.');
-    }
-});
+    document.querySelector('.checkout').addEventListener('click', function() {
+        const endDateInput = document.querySelector('.return-date');  // เลือก input ของ return date
+        
+        if (endDateInput && endDateInput.value) {
+            const endDate = endDateInput.value;  // รับค่าจาก input return-date
+            document.querySelector('#end-date-input').value = endDate;  // ตั้งค่า end_date ใน hidden input
+        } else {
+            alert('Please select a return date.');
+        }
+    });
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // ป้องกันไม่ให้ฟอร์มถูกส่ง
+            const cameraId = this.getAttribute('data-id'); // ดึง id ของกล้องจาก data-id
+            const form = document.querySelector(`#form-${cameraId}`); // เลือกฟอร์มที่เกี่ยวข้อง
+            form.submit(); // ส่งฟอร์มไปที่เซิร์ฟเวอร์เพื่อทำการลบ
+        });
+    });
 
-       document.querySelectorAll('.return-date').forEach(input => {
+
+    document.querySelectorAll('.return-date').forEach(input => {
         input.addEventListener('change', function() {
             const itemId = this.getAttribute('data-id');
             const selectedDate = new Date(this.value);
@@ -82,24 +90,61 @@ document.querySelector('.checkout').addEventListener('click', function() {
         });
     });
 
-    function updateTotalPrice(itemId, days) {
-        const item = document.querySelector(`#cart-item-${itemId}`);
-        const pricePerDay = parseFloat(item.dataset.price);
-        const totalPrice = pricePerDay * days;
-        item.querySelector('.total-price').textContent = `${totalPrice} บาท`;
-    }
-
-        function updateSummary() {
-            let newTotal = 0;
-            document.querySelectorAll('.cart-item .price').forEach(priceElement => {
-                const price = parseFloat(priceElement.innerText.replace(' บาท', ''));
-                if (!isNaN(price)) {
-                    newTotal += price;
-                }
-            });
-            document.querySelector('.total').innerText = `${newTotal} บาท`;  // อัปเดตยอดรวม
+    function updateTotalPrice() {
+        let total = 0;
+        document.querySelectorAll('.cart-item').forEach(item => {
+            const price = parseFloat(item.querySelector('.price').innerText.replace(' บาท', ''));
+            const quantity = parseInt(item.querySelector('.quantity-input').value);
+            total += price * quantity;
+        });
+            
+        document.querySelector('.total').innerText = total + ' บาท';
         }
-
+    
+        // Function to update cart quantity in the backend
+        function updateCartQuantity(input) {
+            const camera_id = input.closest('.cart-item').querySelector('input[name="camera_id"]').value;
+            const quantity = input.value;
+    
+            // Send updated quantity to the backend using fetch
+            fetch('/updateCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ camera_id, quantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Cart updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+        }
+        document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // ป้องกันไม่ให้ฟอร์มถูกส่ง
+            const cameraId = this.closest('form').querySelector('input[name="camera_id"]').value;
+            
+            fetch('/removeFromCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ camera_id: cameraId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // อัปเดต UI หรือแสดงข้อความหลังจากลบสำเร็จ
+                console.log(data);
+                this.closest('.cart-item').remove();  // ลบไอเทมจาก UI
+            })
+            .catch(error => {
+                console.error('Error removing item:', error);
+            });
+        });
+    });
     </script>
 </body>
 </html>
