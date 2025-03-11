@@ -18,15 +18,17 @@
                         <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
-                            <p>Start Date: <span class="start-date"></span></p>
-                            <p>End Date: <span class="end-date"></span></p>
+                            <p>Start Date: <span class="start-date"><%= item.start_date %></span></p>
+                            <p>End Date: <span class="end-date"><%= item.end_date %></span></p>
                         </div>
-                        <p class="price" data-price="<%= item.price_per_day %>"><%= item.price_per_day %> บาท</p>
-
+                        <p class="price" data-price="<%= item.total_price %>"><%= item.total_price %> บาท</p>
                         <form action="/removeFromCart" method="POST">
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
                             <button type="submit" class="remove-btn">Remove</button>
                         </form>
+                        <form action="/updateCart" method="POST">
+                            
+                        </form>                        
                     </div>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
@@ -41,6 +43,10 @@
                     <span>Total:</span>
                     <span class="total"><%= totalPrice %> บาท</span>
                 </div>
+            </div>
+            
+            
+            
                 
                 <!-- ฟอร์ม Checkout -->
                 <form action="/order" method="POST" id="checkout-form">
@@ -75,22 +81,39 @@
         });
 
         // อัปเดตราคาทั้งหมด
-        function updateTotalPrice() {
-            let total = 0;
-            document.querySelectorAll('.cart-item').forEach(item => {
-                // ดึงราคาแต่ละตัวจาก data-price
-                const pricePerDay = parseFloat(item.querySelector('.price').getAttribute('data-price'));
-                
-                if (!isNaN(pricePerDay)) {
-                    // คำนวณราคาทั้งหมดสำหรับแต่ละกล้อง (ราคา x จำนวนวัน)
-                    const itemTotalPrice = pricePerDay;  // 3 วัน
-                    total += itemTotalPrice;  // รวมราคาของทุกๆ กล้อง
-                }
-            });
-
-            document.querySelector('.total').innerText = total + ' บาท';
-        }
+    function updateTotalPrice() {
+    let total = 0;
+    document.querySelectorAll('.cart-item').forEach(item => {
+        const pricePerDay = parseFloat(item.querySelector('.price').getAttribute('data-price'));
         
+        if (!isNaN(pricePerDay)) {
+            const itemTotalPrice = pricePerDay; // Assuming rental for 3 days
+            total += itemTotalPrice;
+        }
+    });
+
+    document.querySelector('.total').innerText = total + ' บาท';
+}
+    function updateCartQuantity(input) {
+            const camera_id = input.closest('.cart-item').querySelector('input[name="camera_id"]').value;
+            const quantity = input.value;
+    
+            // Send updated quantity to the backend using fetch
+            fetch('/updateCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ camera_id, quantity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Cart updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+        }
         updateTotalPrice();
     </script>
 
