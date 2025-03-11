@@ -205,52 +205,54 @@ app.post("/updateuser", async (req, res) => {
 
 
 
-
 app.post('/cart', async (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
-    const UID = req.session.USER;  // ใช้ข้อมูลจาก session
-    console.log(UID);
-    
-    if (!UID) {
-        return res.status(400).send("User is not logged in.");
+    const UID = req.session.USER;
+
+    if (!UID || !UID.userId) {
+        return res.status(401).send('User not logged in');
     }
 
-    const Users = await axios.get(base_url + '/users');
-    const User = Users.data.find(user => user.users_id === UID.userId);
-    console.log(User);
-    
     if (!req.session.cart) {
-        req.session.cart = [];  
+        req.session.cart = [];
     }
 
-    // ตรวจสอบว่ามีกล้องนี้ในตะกร้าแล้วหรือไม่
     const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
     if (!existingItem) {
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
 
-        // กำหนดวันที่เริ่มต้นเป็นปัจจุบัน และวันสิ้นสุดเป็นอีก 3 วัน
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setDate(startDate.getDate() + 3); // เพิ่ม 3 วัน
-
         try {
-            const response = await axios.post(base_url + '/rental', {
-                start_date: startDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
-                end_date: endDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
-                total_price: rental_price_per_day * 3, // ราคาคำนวณตาม 3 วัน
+            // ใช้โซนเวลาของประเทศไทย
+            const now = new Date();
+            const startDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 3);  // บวก 3 วัน
+
+            const formattedStartDate = startDate.toISOString().replace('T', ' ').split('.')[0];
+            const formattedEndDate = endDate.toISOString().replace('T', ' ').split('.')[0];
+
+
+            await axios.post(base_url + '/rental', {
+                start_date: formattedStartDate,
+                end_date: formattedEndDate,
+                total_price: rental_price_per_day * 3,
                 status: 'available',
                 users_id: UID.userId,
                 camera_id: camera_id
             });
-            console.log('Item added to the database via external API:', response.data);
+
+            console.log('Item added to database:', formattedStartDate, formattedEndDate);
         } catch (error) {
-            console.error("Error adding to external API:", error.response ? error.response.data : error.message);
+            console.error("Error adding item to the database:", error.response ? error.response.data : error.message);
             return res.status(500).send("Error adding item to the database");
         }
     }
 
     res.redirect('/cart');
 });
+
+
+
 
 
 
