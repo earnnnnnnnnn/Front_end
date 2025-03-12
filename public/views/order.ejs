@@ -1,77 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>รายการคำสั่งซื้อ</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .form-container label {
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .order-card {
+            background-color: #e6f0ff;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-card h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .order-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .order-card .order-date {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .order-card .order-total {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .details {
+            color: #28a745;
             font-weight: bold;
         }
-        .form-container input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+        .order-card .order-total {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
         }
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .form-container button:hover {
-            background-color: #45a049;
-        }
+
     </style>
 </head>
 <body>
-
-    <div class="form-container">
-        <h2>Order Form</h2>
-        <form action="order" method="POST">
-            <label for="user_id">User_id:</label>
-            <input type="text" id="user_id" name="user_id" required>
-            
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="cart_id">Cart_id:</label>
-            <input type="text" id="cart_id" name="cart_id" required>
-            
-            <label for="start_date">Start_Date:</label>
-            <input type="text" id="start_date" name="start_date" required>
-            
-            <label for="end_date">End_Date:</label>
-            <input type="text" id="end_date" name="end_date" required>
-            
-            <label for="total_price">TotalPrice:</label>
-            <input type="text" id="total_price" name="total_price" required>
-            
-            <label for="status">Status:</label>
-            <input type="text" id="status" name="status" required>
-            
-            <button type="submit">Submit</button>
-        </form>
+    <div class="container">
+        <h1>รายการคำสั่งซื้อ</h1>
+        <div class="order-card">
+            <h2>คำสั่งซื้อที่ </h2>
+            <p class="order-date">วันที่สั่งซื้อ : </p>
+            <a href="#" class="details">ดูรายละเอียด</a>
+            <p class="order-total">รวมคำสั่งซื้อ : </p>
+        </div>
     </div>
-
 </body>
 </html>
