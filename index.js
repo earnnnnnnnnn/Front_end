@@ -519,6 +519,5 @@ const clearPort = (port) => {
 clearPort(PORT);
 
 app.listen(PORT, () => {
-    console.log(`\x1b[37mHost has started!\x1b[0m`);
     console.log(`\x1b[45mWebpage running on http://localhost:${PORT}\x1b[0m`);
 });
