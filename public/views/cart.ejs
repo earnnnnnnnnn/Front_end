@@ -46,8 +46,6 @@
                 </div>
             </div>
 
-       <!-- ฟอร์ม Checkout -->
-
                 <form action="/order" method="POST" id="checkout-form">
                     <input type="hidden" name="end_date" id="end-date-input">
                     <button type="submit" class="checkout">Proceed to Checkout</button>
@@ -59,10 +57,10 @@
     <script>
         
         document.querySelector('#checkout-form').addEventListener('submit', function(event) {
-            const cartItems = document.querySelectorAll('.cart-item'); // ดึงรายการสินค้าทั้งหมดในตะกร้า
+            const cartItems = document.querySelectorAll('.cart-item');
             if (cartItems.length === 0) {
                 alert('คุณไม่มีสินค้าภายในตะกร้า กรุณาเลือกสินค้าก่อนทำการเช็คเอาท์');
-                event.preventDefault(); // หยุดการส่งฟอร์มถ้าไม่มีสินค้า
+                event.preventDefault(); 
             }
         });
 
@@ -72,7 +70,7 @@
             const pricePerDay = parseFloat(item.querySelector('.price').getAttribute('data-price'));
             
             if (!isNaN(pricePerDay)) {
-                const itemTotalPrice = pricePerDay; // Assuming rental for 3 days
+                const itemTotalPrice = pricePerDay; 
                 total += itemTotalPrice;
             }
         });
@@ -83,7 +81,6 @@
                 const camera_id = input.closest('.cart-item').querySelector('input[name="camera_id"]').value;
                 const quantity = input.value;
         
-                // Send updated quantity to the backend using fetch
                 fetch('/updateCart', {
                     method: 'POST',
                     headers: {

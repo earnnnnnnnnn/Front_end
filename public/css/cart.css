@@ -17,8 +17,8 @@ body {
 
 .container {
     display: flex;
-    flex-direction: row; /* ใช้ flexbox เพื่อจัดเรียงในแนวนอน */
-    justify-content: space-between; /* ให้คอนเทนต์อยู่ฝั่งซ้ายและขวา */
+    flex-direction: row; 
+    justify-content: space-between;
     width: 80%;
     max-width: 1200px;
     background: white;
@@ -27,9 +27,8 @@ body {
     border-radius: 10px;
 }
 
-/* Shopping Cart */
 .cart {
-    width: 70%; /* ตั้งความกว้างให้มีขนาดพอดี */
+    width: 70%;
     padding: 20px;
 }
 
@@ -107,9 +106,8 @@ body {
     color: #ff6f61;
 }
 
-/* Summary Section */
 .summary {
-    width: 28%; /* ตั้งความกว้างให้พอดีกับทางขวา */
+    width: 28%;
     background: #f4f4f4;
     padding: 20px;
     border-radius: 10px;
@@ -164,19 +162,18 @@ body {
     background: #ff3b2f;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        flex-direction: column; /* เปลี่ยนเป็น column บนมือถือ */
+        flex-direction: column;
     }
 
     .cart {
-        width: 100%; /* ขยาย cart ให้เต็มความกว้าง */
+        width: 100%;
         margin-bottom: 20px;
     }
 
     .summary {
-        width: 100%; /* ขยาย summary ให้เต็มความกว้างบนมือถือ */
+        width: 100%;
     }
 
     .cart-item {
