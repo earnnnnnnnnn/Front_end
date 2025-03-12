@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="../css/register.css">
+    <title>Edit Information</title>
+    <link rel="stylesheet" href="../css/Edit.css">
 </head>
 <body>
     <div class="center">
-        <h1>ข้อมูลส่วนตัว</h1>
+        <h1>Edit Information</h1>
 
         <!-- ฟอร์มที่ส่งข้อมูลไปยัง Backend -->
         <form action="/updateuser" method="post"> 
@@ -48,7 +48,11 @@
             <input type="submit" value="edit">
             
 
-            <a href="/"><input type="button" value="ยกเลิก"></a>
+            <!-- ปุ่มยกเลิก -->
+            <a href="/" class="cancel-btn">
+                <input type="button" value="ยกเลิก">
+            </a>
+
 
             </div>
         </form>
