@@ -310,6 +310,7 @@ app.post('/cart', async (req, res) => {
 
 
 
+
 app.post('/cart', (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
 
@@ -409,6 +410,7 @@ app.post("/order", async (req, res) => {
 });
 
 
+
 app.get("/rentalProcess", (req, res) => {
     res.render("rentalProcess");  
 });
@@ -434,14 +436,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
-
-
-
-
-
-
-
-
 
 
 
@@ -493,16 +487,6 @@ app.post('/checkout', async (req, res) => {
 //         res.status(500).json({ error: 'Failed to update end date' });
 //     }
 // });
-
-
-
-
-
-
-
-
-
-
 
 
 
