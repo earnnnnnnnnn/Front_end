@@ -21,7 +21,7 @@
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
                         </div>
-                        <p class="price" data-price="<%= item.rental_price_per_day %>"><%= item.rental_price_per_day %> บาท</p>
+                        <p class="price" data-price="<%= item.rental_price_per_day %>"><%= item.rental_price_per_day %> Bath</p>
                         <form action="/removeFromCart" method="POST">
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
                             <button type="submit" class="remove-btn">Remove</button>
@@ -42,10 +42,10 @@
                 <h2>Summary</h2>
                 <div class="summary-item">
                     <span>Total:</span>
-                    <span class="total"><%= totalPrice %> บาท</span>
+                    <span class="total"><%= totalPrice %> Bath</span>
                 </div>
             </div>
-            
+
        <!-- ฟอร์ม Checkout -->
 
                 <form action="/order" method="POST" id="checkout-form">
