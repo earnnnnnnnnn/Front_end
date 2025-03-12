@@ -353,6 +353,7 @@ app.get("/create", (req, res) => {
 
 app.post("/order", async (req, res) => {
     try {
+
         const UserId = req.session.USER.userId;
 
         const cartResponse = await axios.get(base_url + '/Cart');
@@ -399,18 +400,20 @@ app.get('/receipt/:paymetId', async (req, res) => {
         const { paymetId } = req.params
         const userId = req.session.USER.userId
 
-        console.log(paymetId);
 
 
         const userRes = await axios.get(base_url + '/users')
         const paymentRes = await axios.get(base_url + '/payment')
         const orderRes = await axios.get(base_url + '/Order')
+        const camera = await axios.get(base_url + '/camera')
 
         const user = userRes.data.find(user => user.users_id == userId)
         const payment = paymentRes.data.find(payment => payment.payment_id == paymetId)
         const order = orderRes.data.filter(orders => orders.payment_id == paymetId)
-        
-        
+       
+        console.log(order.data);
+
+        res.render('receipt', { user, payment, order:order.data,camera });
 
     } catch (error) {
         console.error("Error fetching receipt data:", error);
@@ -441,6 +444,7 @@ app.get("/head", async (req, res) => {
 const PORT = 5000;
 
 const { execSync } = require('child_process');
+const { render } = require('ejs');
 
 const clearPort = (port) => {
     try {

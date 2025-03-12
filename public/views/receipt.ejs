@@ -1,32 +1,65 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt Invitation</title>
-    <link rel="stylesheet" href="receipt.ejs">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ใบเสร็จการสั่งซื้อ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 10px;
+    }
+    .container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section label {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <div class="receipt">
-        <div class="title">RECEIPT</div>
-        <div class="info">
-            CROSSIRON MILLS MALL<br>
-            261055 Crossiron Blvd<br>
-            Rocky View County, AB T4A 0G3<br>
-            November 24, 2013<br>
-            Noon - 5pm
-        </div>
-        <div class="info">Please join us for Anna’s 14th birthday party!</div>
-        <div class="items">
-            <div><span>Lots of Fun</span> <span>0.00</span></div>
-            <div><span>Hunger Games: Catching Fire</span> <span>0.00</span></div>
-            <div><span>Shopping</span> <span>0.00</span></div>
-            <div><span>Cupcakes/Movie Snacks</span> <span>0.00</span></div>
-            <div><span>Swag</span> <span>0.00</span></div>
-        </div>
-        <div class="total">Total: Priceless</div>
-        <div class="info">Please RSVP to Kristie or Anna at<br>403-555-1234 by<br>Friday, November 22, 2013.</div>
-        <div class="info">Hope to see you there!</div>
-        <div class="barcode"></div>
+
+  <div class="container">
+    <h1>ใบเสร็จการสั่งซื้อ</h1>
+    <div class="section">
+      <label>Order ID:</label> <span><%= order.order_id %></span>
     </div>
+    <div class="section">
+      <label>User ID:</label> <span><%= user.user_id %></span>
+    </div>
+    <div class="section">
+      <label>Username:</label> <span><%= user.username %></span>
+    </div>
+    <div class="section">
+      <label>Email:</label> <span><%= user.email %></span>
+    </div>
+
+    <h3>ช่วงเวลาใช้งาน:</h3>
+    <div class="section">
+      <label>Start Date:</label> <span><%= order.startDate %></span>
+    </div>
+    <div class="section">
+      <label>End Date:</label> <span><%= order.EndDate %></span>
+    </div>
+
+    <h3>รายละเอียดการสั่งซื้อ:</h3>
+    <div class="section">
+      <label>Total Price:</label> <span><%= payment.total_price %></span>
+    </div>
+    <div class="section">
+      <label>Camera:</label> <span><%= camera.camera_name %></span>
+    </div>
+  </div>
+
 </body>
 </html>
