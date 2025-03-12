@@ -20,7 +20,7 @@
                 <span></span>
                 <label>Password</label>
             </div>
-            <div class="pass">Forgot Password?</div>
+            
             <button type="submit">Login</button>
             <div class="register_link">
                 Not a member? <a href="/register">Register</a>
@@ -28,32 +28,7 @@
         </form>
     </div>
 
-    <!-- <script>
-        // เมื่อฟอร์มถูกส่ง
-        document.getElementById('loginForm').onsubmit = function(event) {
-            event.preventDefault();  // หยุดการส่งฟอร์มแบบปกติ
-            const email = document.querySelector('[name="email"]').value;
-            const password = document.querySelector('[name="password"]').value;
     
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password })  // ส่งข้อมูล login ไป
-            })
-            .then(response => response.json())  // รับข้อมูลเป็น JSON จาก backend
-            .then(data => {
-                if (data.errorMessage) {
-                    alert(data.errorMessage);  // ถ้ามีข้อผิดพลาดจาก backend ให้แสดงข้อความ
-                } else if (data.success) {
-                    // ถ้าล็อกอินสำเร็จ ให้เปลี่ยนเส้นทางไปหน้าแรก
-                    window.location.href = '/';  // ไปที่หน้าแรก
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script> -->
     
 </body>
 </html>
