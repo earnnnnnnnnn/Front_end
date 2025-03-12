@@ -246,53 +246,39 @@ app.post('/cart', async (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
     const UID = req.session.USER;
 
+    // ตรวจสอบว่า User ได้ล็อกอินหรือยัง
     if (!UID || !UID.userId) {
         return res.status(401).send('User not logged in');
     }
 
+    // ถ้าไม่มี cart ใน session ให้สร้างขึ้นใหม่
     if (!req.session.cart) {
         req.session.cart = [];
     }
 
+    // ตรวจสอบว่า camera_id มีอยู่ใน cart หรือยัง
     const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
+
     if (!existingItem) {
+        // ถ้าไม่มี ให้เพิ่ม item ใหม่ใน cart
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
 
         try {
+            // ส่งข้อมูลไปที่ฐานข้อมูล
             await axios.post(base_url + '/Cart', {
                 users_id: UID.userId,
                 camera_id: camera_id,
             });
-
-
         } catch (error) {
             console.error("Error adding item to the database:", error.response ? error.response.data : error.message);
             return res.status(500).send("Error adding item to the database");
         }
     }
 
+    // หลังจากการเพิ่ม item เสร็จสิ้นแล้ว ให้ redirect ไปที่ /cart
     res.redirect('/cart');
 });
 
-
-
-
-app.post('/cart', (req, res) => {
-    const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
-
-    if (!req.session.cart) {
-        req.session.cart = [];  
-    }
-
-    const existingItem = req.session.cart.find(item => item.camera_id === camera_id);
-    if (!existingItem) {
-       
-        req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
-    }
-
-    
-    res.redirect('/cart');
-});
 
 
 app.post("/removeFromCart", async (req, res) => {

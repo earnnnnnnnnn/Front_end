@@ -20,12 +20,6 @@
               <li><a href="#featured-cameras">Cameras</a></li>
               <li><a href="/rentalProcess">Rental Process</a></li>
               <li><a href="/cart">Cart 
-                <div class="cart-icon">
-                  <a href="/cart">
-                      <i class="fa fa-shopping-cart"></i> 
-                      <span class="cart-count" id="cart-count"><%= cartCount %></span>
-                  </a>
-              </div>
               </a></li> <!-- เพิ่มแสดงจำนวนสินค้าใน Cart -->
               <li><a href="#contact">Contact</a></li>
               <% if (loginSession) { %>
@@ -40,7 +34,6 @@
             </ul>
           </nav>
         </div>
-        
 
       <!-- Hero Section -->
       <section class="hero">
@@ -129,10 +122,7 @@
       </footer>
 
       <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        
-          let cartCount = localStorage.getItem("cartCount") || 0;
-          document.getElementById("cart-count").textContent = cartCount;
+   
 
         
           document.querySelectorAll(".button-submit").forEach(button => {
@@ -143,7 +133,7 @@
               document.getElementById("cart-count").textContent = cartCount; 
             });
           });
-        });
+ 
       </script>
 
 
