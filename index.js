@@ -383,8 +383,6 @@ app.post("/order", async (req, res) => {
             await axios.delete(base_url + `/Cart/${item.camera_id}/${UserId}`)
         }        
 
-        
-
         res.redirect('/receipt/' + payment.data.payment_id)
     } catch (error) {
         console.error("❌ Error placing order:", error);
@@ -408,12 +406,14 @@ app.get('/receipt/:paymetId', async (req, res) => {
         const camera = await axios.get(base_url + '/camera')
 
         const user = userRes.data.find(user => user.users_id == userId)
+        
         const payment = paymentRes.data.find(payment => payment.payment_id == paymetId)
+
+
         const order = orderRes.data.filter(orders => orders.payment_id == paymetId)
        
-        console.log(order.data);
-
-        res.render('receipt', { user, payment, order:order.data,camera });
+        
+        res.render('receipt', { user, payment, order:order, camera: camera.data });
 
     } catch (error) {
         console.error("Error fetching receipt data:", error);

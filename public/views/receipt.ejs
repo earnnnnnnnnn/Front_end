@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,56 +11,96 @@
       margin: 20px;
       padding: 10px;
     }
+
     .container {
       border: 1px solid #ccc;
       padding: 20px;
       width: 600px;
       margin: auto;
     }
+
     h1 {
       text-align: center;
     }
+
     .section {
       margin-bottom: 20px;
     }
+
     .section label {
       font-weight: bold;
     }
   </style>
 </head>
+
 <body>
 
   <div class="container">
     <h1>ใบเสร็จการสั่งซื้อ</h1>
+
     <div class="section">
-      <label>Order ID:</label> <span><%= order.order_id %></span>
+      <label>Order ID:</label> <span>
+        <%= order.order_id %>
+      </span>
     </div>
+
     <div class="section">
-      <label>User ID:</label> <span><%= user.user_id %></span>
+      <label>User ID:</label> <span>
+        <%= user.users_id %>
+      </span>
     </div>
+
     <div class="section">
-      <label>Username:</label> <span><%= user.username %></span>
+      <label>Username:</label> <span>
+        <%= user.username %>
+      </span>
     </div>
+
     <div class="section">
-      <label>Email:</label> <span><%= user.email %></span>
+      <label>Email:</label> <span>
+        <%= user.email %>
+      </span>
     </div>
 
     <h3>ช่วงเวลาใช้งาน:</h3>
-    <div class="section">
-      <label>Start Date:</label> <span><%= order.startDate %></span>
-    </div>
-    <div class="section">
-      <label>End Date:</label> <span><%= order.EndDate %></span>
-    </div>
+    <% const startDateThai=new Date(payment.startDate).toLocaleDateString('th-TH', { day: '2-digit' , month: '2-digit' ,
+      year: 'numeric' }); const endDateThai=new Date(payment.endDate).toLocaleDateString('th-TH', { day: '2-digit' ,
+      month: '2-digit' , year: 'numeric' }); %>
 
-    <h3>รายละเอียดการสั่งซื้อ:</h3>
-    <div class="section">
-      <label>Total Price:</label> <span><%= payment.total_price %></span>
-    </div>
-    <div class="section">
-      <label>Camera:</label> <span><%= camera.camera_name %></span>
-    </div>
+      <div class="section">
+        <label>Start Date:</label> <span>
+          <%= startDateThai %>
+        </span>
+      </div>
+
+      <div class="section">
+        <label>End Date:</label> <span>
+          <%= endDateThai %>
+        </span>
+      </div>
+
+      <h3>รายละเอียดการสั่งซื้อ:</h3>
+
+      <div class="section">
+        <label>Total Price:</label> <span>
+          <%= payment.totalPrice %> บาท
+        </span>
+      </div>
+
+      <div class="section">
+        <label>Camera:</label> 
+
+        <% order.forEach(order => { %>
+          <% camera.forEach(item => { %>
+            <% if (order.camera_id == item.camera_id) { %>
+              <span><%= item.cameraname %></span>
+            <% } %>
+          <% }) %>
+        <% }) %>
+      </div>
+
   </div>
 
 </body>
+
 </html>
