@@ -444,7 +444,6 @@ app.get("/head", async (req, res) => {
 const PORT = 5000;
 
 const { execSync } = require('child_process');
-const { render } = require('ejs');
 
 const clearPort = (port) => {
     try {
