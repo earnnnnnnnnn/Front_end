@@ -5,7 +5,6 @@ var bodyParser = require('body-parser');
 const path = require("path");
 const session = require("express-session");
 const { log } = require('console');
-const moment = require('moment-timezone');
 
 
 app.use(session({
@@ -201,7 +200,7 @@ app.get("/cart", async (req, res) => {
         const UID = req.session.USER;
 
         if (!UID || !UID.userId) {
-            return res.status(400).send('User is not logged in or no userId found in session');
+            res.redirect('/login')
         }
 
         const cartResponse = await axios.get(base_url + '/Cart');
@@ -421,6 +420,20 @@ app.get('/receipt/:paymetId', async (req, res) => {
     }
 })
 
+
+app.get('/orderList', async (req, res) => {
+    try {
+        const userId = req.session.USER.userId
+
+        const paymentRes = await axios.get(base_url + '/payment')
+        const payment = paymentRes.data.filter(payment => payment.users_id == userId)
+
+        res.render('order', { payment })
+    } catch (error) {
+        console.error("Error fetching Order:", error);
+        res.status(500).send("Error fetching order");
+    }
+})
 
 
 

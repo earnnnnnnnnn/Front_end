@@ -72,12 +72,22 @@
 <body>
     <div class="container">
         <h1>รายการคำสั่งซื้อ</h1>
-        <div class="order-card">
-            <h2>คำสั่งซื้อที่ </h2>
-            <p class="order-date">วันที่สั่งซื้อ : </p>
-            <a href="#" class="details">ดูรายละเอียด</a>
-            <p class="order-total">รวมคำสั่งซื้อ : </p>
-        </div>
+        <% let i = 1 %>
+        <% payment.forEach(payment => { %>
+            <div class="order-card">
+                <h2>คำสั่งซื้อที่ <%= i++ %></h2>
+                
+                <% const startDateThai=new Date(payment.startDate).toLocaleDateString('th-TH', { 
+                    day: '2-digit' , 
+                    month: '2-digit' ,
+                    year: 'numeric' 
+                });%>
+
+                <p class="order-date">วันที่สั่งซื้อ : <%= startDateThai %></p>
+                <a href="/receipt/<%= payment.payment_id %>" class="details">ดูรายละเอียด</a>
+                <p class="order-total">รวมคำสั่งซื้อ : ฿<%= payment.totalPrice %></p>
+            </div>
+        <% }); %>
     </div>
 </body>
 </html>
