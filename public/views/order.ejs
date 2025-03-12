@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายการคำสั่งซื้อ</title>
+    <title>Rentals List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,11 +71,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>รายการคำสั่งซื้อ</h1>
+        <h1>Rentals List</h1>
         <% let i = 1 %>
         <% payment.forEach(payment => { %>
             <div class="order-card">
-                <h2>คำสั่งซื้อที่ <%= i++ %></h2>
+                <h2>Rentals List <%= i++ %></h2>
                 
                 <% const startDateThai=new Date(payment.startDate).toLocaleDateString('th-TH', { 
                     day: '2-digit' , 
@@ -83,9 +83,9 @@
                     year: 'numeric' 
                 });%>
 
-                <p class="order-date">วันที่สั่งซื้อ : <%= startDateThai %></p>
-                <a href="/receipt/<%= payment.payment_id %>" class="details">ดูรายละเอียด</a>
-                <p class="order-total">รวมคำสั่งซื้อ : ฿<%= payment.totalPrice %></p>
+                <p class="order-date">Start Date : <%= startDateThai %></p>
+                <a href="/receipt/<%= payment.payment_id %>" class="details">Detail</a>
+                <p class="order-total">Total Rental : ฿<%= payment.totalPrice %></p>
             </div>
         <% }); %>
     </div>

@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="../css/head.css">
-      <title>Document</title>
+      <title>CameraRent</title>
   </head>
   <body>
       <div id="alert-message" class="alert-message">
@@ -68,7 +68,7 @@
 
                 <form action="/detail" method="GET" class="detail-form">
                   <input type="hidden" name="camera_id" value="<%= cameraname[i].camera_id %>">
-                  <button type="button" class="button-submit" onclick="goToDetail(this)">ดูรายละเอียด</button>
+                  <button type="button" class="button-submit" onclick="goToDetail(this)">Details</button>
                 </form>
                 
                 <script>
@@ -90,10 +90,10 @@
 
       <section class="search-filter">
         <div class="container">
-          <h2>ค้นหากล้องที่ต้องการ</h2>
+          <h2>Seach</h2>
           <form action="#" method="get">
             <input type="text" placeholder="ค้นหากล้อง...">
-            <button type="submit">ค้นหา</button>
+            <button type="submit">Seach</button>
           </form>
         </div>
       </section>
