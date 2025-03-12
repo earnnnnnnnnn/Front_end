@@ -57,30 +57,7 @@
     </div>
 
     <script>
-        // กำหนดวันที่เริ่มต้นและวันที่สิ้นสุด
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const today = new Date();
-        //     const startDate = today.toISOString().split('T')[0];
-
-        //     const endDate = new Date();
-        //     endDate.setDate(today.getDate() + 3);
-        //     const formattedEndDate = endDate.toISOString().split('T')[0];
-
-        //     document.querySelectorAll('.start-date').forEach(span => span.innerText = startDate);
-        //     document.querySelectorAll('.end-date').forEach(span => span.innerText = formattedEndDate);
-        //     document.querySelector('#end-date-input').value = formattedEndDate;
-        // });
-
-        // // ตรวจสอบก่อน Checkout
-        // document.querySelector('.checkout').addEventListener('click', function(event) {
-        //     if (!document.querySelector('#end-date-input').value) {
-        //         alert('เกิดข้อผิดพลาดในการกำหนดวันที่ กรุณาลองใหม่');
-        //         event.preventDefault();
-        //     }
-        // });
-
-        // อัปเดตราคาทั้งหมด
-        // เพิ่มฟังก์ชันตรวจสอบตะกร้าก่อนทำการ checkout
+        
         document.querySelector('#checkout-form').addEventListener('submit', function(event) {
             const cartItems = document.querySelectorAll('.cart-item'); // ดึงรายการสินค้าทั้งหมดในตะกร้า
             if (cartItems.length === 0) {
