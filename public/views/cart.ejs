@@ -18,8 +18,6 @@
                         <img src="../image/<%= item.cameraimg %>" alt="<%= item.cameraname %>">
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
-                            <p>Start Date: <span class="start-date"><%= item.start_date %></span></p>
-                            <p>End Date: <span class="end-date"><%= item.end_date %></span></p>
                         </div>
                         <p class="price" data-price="<%= item.total_price %>"><%= item.total_price %> บาท</p>
                         <form action="/removeFromCart" method="POST">
