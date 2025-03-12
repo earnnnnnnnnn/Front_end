@@ -80,18 +80,6 @@ body {
     color: #333;
 }
 
-.remove {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #ff6f61;
-    transition: color 0.3s;
-}
-
-.remove:hover {
-    color: #ff3b2f;
-}
 
 .back {
     display: inline-block;
@@ -105,6 +93,27 @@ body {
 .back:hover {
     color: #ff6f61;
 }
+.remove-btn {
+    background-color: #ff6f61; /* สีแดง */
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.remove-btn:hover {
+    background-color: #ff3b2f; /* เปลี่ยนเป็นสีแดงเข้มเมื่อโฮเวอร์ */
+    transform: scale(1.05); /* ขยายเล็กน้อย */
+}
+
+.remove-btn:active {
+    transform: scale(0.95); /* ย่อเล็กลงเมื่อกด */
+}
+
 
 .summary {
     width: 28%;
