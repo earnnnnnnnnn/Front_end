@@ -329,9 +329,15 @@ app.get("/users/:id", async (req, res) => {
 });
 
 
+app.get("/create", (req, res) => {
+    res.render("create");
+});
+
+
 
 app.post("/order", async (req, res) => {
     try {
+
         const UserId = req.session.USER.userId;
 
         const cartResponse = await axios.get(base_url + '/Cart');
@@ -345,15 +351,15 @@ app.post("/order", async (req, res) => {
             totalPrice += camera.rental_price_per_day;
         }
 
-        // คำนวณวันที่ end_date ที่เพิ่ม 3 วันจากวันที่ปัจจุบัน
         const today = new Date();
-        today.setDate(today.getDate() + 3); // เพิ่ม 3 วัน
-        const endDate = today.toISOString().split('T')[0]; // แปลงวันที่เป็นรูปแบบ YYYY-MM-DD
+        today.setDate(today.getDate() + 3);
+        const endDate = today.toISOString().split('T')[0]; // แปลงเป็น YYYY-MM-DD
 
+        // สร้างการชำระเงิน
         const payment = await axios.post(base_url + '/payment', {
             users_id: UserId,
             totalPrice,
-            end_date: endDate // ส่งวันที่ end_date ไปในคำขอ
+            endDate: endDate // ส่ง end_date ไปพร้อมกับข้อมูลการชำระเงิน
         });
 
         for (const item of myCart) {
@@ -361,14 +367,13 @@ app.post("/order", async (req, res) => {
                 payment_id: payment.data.payment_id,
                 user_id: UserId,
                 camera_id: item.camera_id,
-                end_date: endDate // ส่งวันที่ end_date ในคำขอของแต่ละ order
             };
 
             await axios.post(base_url + '/Order', payload);
             await axios.delete(base_url + `/Cart/${item.camera_id}/${UserId}`)
-        }
+        }        
 
-        res.redirect('/receipt/' + payment.data.payment_id);
+        res.redirect('/receipt/' + payment.data.payment_id)
     } catch (error) {
         console.error("❌ Error placing order:", error);
         res.status(500).send("Internal Server Error");
