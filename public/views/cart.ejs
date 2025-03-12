@@ -79,6 +79,15 @@
         // });
 
         // อัปเดตราคาทั้งหมด
+        // เพิ่มฟังก์ชันตรวจสอบตะกร้าก่อนทำการ checkout
+document.querySelector('#checkout-form').addEventListener('submit', function(event) {
+    const cartItems = document.querySelectorAll('.cart-item'); // ดึงรายการสินค้าทั้งหมดในตะกร้า
+    if (cartItems.length === 0) {
+        alert('คุณไม่มีสินค้าภายในตะกร้า กรุณาเลือกสินค้าก่อนทำการเช็คเอาท์');
+        event.preventDefault(); // หยุดการส่งฟอร์มถ้าไม่มีสินค้า
+    }
+});
+
     function updateTotalPrice() {
     let total = 0;
     document.querySelectorAll('.cart-item').forEach(item => {

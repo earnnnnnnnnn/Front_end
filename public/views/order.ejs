@@ -3,42 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rental Report</title>
-    <link rel="stylesheet" href="../css/report.css">
+    <title>Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-container label {
+            font-weight: bold;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Report Table (user -> rental -> return)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>User Name</th>
-                    <th>Rental ID</th>
-                    <th>Return Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (users && rentals && returns) { %>
-                    <% users.forEach(user => { %>
-                        <% let userRentals = rentals.filter(rental => rental.user_id === user.id); %>
-                        <% userRentals.forEach(rental => { %>
-                            <% let returnItem = returns.find(r => r.rental_id === rental.id); %>
-                            <% if (returnItem) { %>
-                                <tr>
-                                    <td><%= user.name %></td>
-                                    <td><%= rental.id %></td>
-                                    <td><%= returnItem.return_date %></td>
-                                </tr>
-                            <% } %>
-                        <% }); %>
-                    <% }); %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="3">No data available</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+
+    <div class="form-container">
+        <h2>Order Form</h2>
+        <form action="order" method="POST">
+            <label for="user_id">User_id:</label>
+            <input type="text" id="user_id" name="user_id" required>
+            
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="cart_id">Cart_id:</label>
+            <input type="text" id="cart_id" name="cart_id" required>
+            
+            <label for="start_date">Start_Date:</label>
+            <input type="text" id="start_date" name="start_date" required>
+            
+            <label for="end_date">End_Date:</label>
+            <input type="text" id="end_date" name="end_date" required>
+            
+            <label for="total_price">TotalPrice:</label>
+            <input type="text" id="total_price" name="total_price" required>
+            
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" required>
+            
+            <button type="submit">Submit</button>
+        </form>
     </div>
+
 </body>
 </html>
