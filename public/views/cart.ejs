@@ -19,7 +19,7 @@
                         <div class="item-details">
                             <p class="item-name"><%= item.cameraname %></p>
                         </div>
-                        <p class="price" data-price="<%= item.total_price %>"><%= item.total_price %> บาท</p>
+                        <p class="price" data-price="<%= item.rental_price_per_day %>"><%= item.rental_price_per_day %> บาท</p>
                         <form action="/removeFromCart" method="POST">
                             <input type="hidden" name="camera_id" value="<%= item.camera_id %>">
                             <button type="submit" class="remove-btn">Remove</button>
