@@ -1,14 +1,12 @@
-//Description: Node.js HTML client
-//request: npm install express ejs axios body-parser
-
 const express = require('express');
 const axios = require('axios');
 const app = express();
 var bodyParser = require('body-parser');
 const path = require("path");
-// const { check } = require('prettier');
 const session = require("express-session");
 const { log } = require('console');
+const moment = require('moment-timezone');
+
 
 app.use(session({
     secret: 'your_secret_key',
@@ -18,8 +16,6 @@ app.use(session({
 }));
 
 
-//Base URL for the API
-//const base_url = "https://api.example.com";
 const base_url = "http://localhost:3000";
 app.set("views", path.join(__dirname, "/public/views"));
 app.set("view engine", "ejs");
@@ -34,7 +30,6 @@ app.get("/", async (req, res) => {
         const loginSession = req.session.USER;
         const cameraname = await axios.get(base_url + '/camera');
 
-        console.log(loginSession);
         const cartCount = req.session.cart ? req.session.cart.length : 0;
         
 
@@ -50,13 +45,11 @@ app.get("/", async (req, res) => {
 app.get("/detail", async (req, res) => {
     try {
         const cameraId = req.query.camera_id;  // รับ camera_id จาก query
-        console.log("Camera ID:", cameraId);  // เช็คว่าได้ค่า camera_id มาหรือไม่
         
         if (!cameraId) {
             return res.status(400).send("Camera ID is required");
         }
 
-        // ดึงข้อมูลกล้องจากฐานข้อมูลหรือ API
         const cameraResponse = await axios.get(`${base_url}/camera/${cameraId}`);
         const camera = cameraResponse.data;
 
@@ -83,14 +76,11 @@ app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
         const response = await axios.get(base_url + '/users');
         const users = response.data;
 
-        // ค้นหาผู้ใช้จาก email ที่กรอกมา
         const user = users.find(user => user.email === email);
 
-        // ถ้าไม่มีผู้ใช้หรือรหัสผ่านไม่ตรง
         if (!user || password !== user.password) {
             return res.render("login", { errorMessage: "Invalid email or password. Please try again." });
         }
@@ -98,11 +88,23 @@ app.post("/login", async (req, res) => {
         req.session.USER = { userId: user.users_id };
         
         if (req.session.USER)
-            res.redirect("/");  // ทำการ redirect ไปยังหน้าแรก
+            res.redirect("/");
     } catch (err) {
         console.error(err);
         res.status(500).send('Error');
     }
+});
+
+
+// Route สำหรับ Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("Failed to log out");
+        }
+        // รีไดเร็กต์ผู้ใช้ไปที่หน้า login หลังจากออกจากระบบ
+        res.redirect('/login');
+    });
 });
 
 
@@ -115,27 +117,22 @@ app.get("/register", (req, res) => {
 app.post("/signup", async (req, res) => {
     const { username, email, password, phone } = req.body;
 
-    // ตรวจสอบว่า email ซ้ำในฐานข้อมูลหรือไม่
     try {
         const response = await axios.get(base_url + '/users');
         const users = response.data;
 
-        // ถ้า email ซ้ำ
         if (users.some(user => user.email === email)) {
             return res.status(400).send("Email already exists.");
         }
 
-        // ตรวจสอบรหัสผ่านให้มีความยาว 8 ตัวและเป็นตัวเลข
         if (password.length !== 8 || isNaN(password)) {
             return res.status(400).send("Password must be 8 digits and numeric.");
         }
 
-        // หากไม่ใช้ bcrypt ก็ไม่ต้องทำการเข้ารหัสรหัสผ่าน
-        // แค่ส่งข้อมูลรหัสผ่านตรงๆ ไปยัง backend
         await axios.post(base_url + '/users', {
             username,
             email,
-            password, // ส่งรหัสผ่านตรง ๆ โดยไม่เข้ารหัส
+            password,
             phone_number: phone
         });
 
@@ -152,7 +149,6 @@ app.post("/signup", async (req, res) => {
 app.get("/Edit_information", async (req, res) => {
     try {
         const UID = req.session.USER;
-        console.log(UID)
         const Users = await axios.get(base_url + '/users');
         const User = Users.data.find(Users => Users.users_id == UID.userId);
         // console.log(User)
@@ -172,22 +168,18 @@ app.post("/updateuser", async (req, res) => {
     const UID = req.session.USER;
 
     try {
-        // ดึงข้อมูลผู้ใช้จากฐานข้อมูล
         const response = await axios.get(base_url + '/users');
         const users = response.data;
 
-        // ตรวจสอบว่า email ซ้ำในฐานข้อมูลหรือไม่
         const userExist = users.find(user => user.email === email && user.id !== UID.userId);
         if (userExist) {
             return res.status(400).send("Email already exists.");
         }
 
-        // ตรวจสอบรหัสผ่านให้มีความยาว 8 ตัวและเป็นตัวเลข
         if (password.length !== 8 || isNaN(password)) {
             return res.status(400).send("Password must be 8 digits and numeric.");
         }
 
-        // ใช้ PUT แทน POST เพื่ออัพเดตข้อมูลผู้ใช้ที่มีอยู่แล้ว
         await axios.put(base_url + `/users/${UID.userId}`, {
             username,
             email,
@@ -212,19 +204,15 @@ app.get("/cart", async (req, res) => {
             return res.status(400).send('User is not logged in or no userId found in session');
         }
 
-        // ดึงข้อมูลจาก API /rental เฉพาะของผู้ใช้
-        const cartResponse = await axios.get(base_url + '/rental');
+        const cartResponse = await axios.get(base_url + '/Cart');
         const cart = cartResponse.data.filter(item => item.users_id === UID.userId);
 
-        // ถ้าไม่พบ cart items สำหรับผู้ใช้
         if (!cart.length) {
             return res.render("cart", { cart: [], totalPrice: 0, error: 'No items in cart' });
         }
 
-        // คำนวณ totalPrice โดยการบวกค่า rental_price_per_day ของแต่ละกล้อง
         const totalPrice = cart.reduce((sum, item) => sum + (item.rental_price_per_day || 0), 0);  // บวกค่า rental_price_per_day
 
-        // ดึงข้อมูลกล้องจาก API /camera
         const cameraResponse = await axios.get(base_url + '/camera');
         const cameraData = cameraResponse.data;
 
@@ -232,7 +220,6 @@ app.get("/cart", async (req, res) => {
             return res.render("cart", { cart: [], totalPrice: 0, error: 'No camera data available' });
         }
 
-        // ผูกข้อมูลกล้องเข้ากับ cart
         const enrichedCart = cart.map(item => {
             const camera = cameraData.find(c => c.camera_id === item.camera_id);
             return {
@@ -253,12 +240,6 @@ app.get("/cart", async (req, res) => {
 });
 
 
-const addHours = (date, hours) => {
-    const newDate = new Date(date);
-    newDate.setHours(newDate.getHours() + hours);
-    return newDate;
-};
-
 app.post('/cart', async (req, res) => {
     const { camera_id, cameraname, rental_price_per_day, cameraimg } = req.body;
     const UID = req.session.USER;
@@ -276,28 +257,12 @@ app.post('/cart', async (req, res) => {
         req.session.cart.push({ camera_id, cameraname, rental_price_per_day, cameraimg });
 
         try {
-            const startDate = new Date();
-            startDate.setHours(12, 0, 0, 0); // ใช้เวลาปัจจุบัน
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 3); // เพิ่ม 3 วัน
-
-            // แปลงเวลาเป็น UTC+7
-            const startDateUTC7 = addHours(startDate, 7);
-            const endDateUTC7 = addHours(endDate, 7);
-
-            const formatDate = (date) =>
-                date.toISOString().replace('T', ' ').split('.')[0]; // "YYYY-MM-DD HH:mm:ss"
-
-            await axios.post(base_url + '/rental', {
-                start_date: formatDate(startDateUTC7),
-                end_date: formatDate(endDateUTC7),
-                total_price: rental_price_per_day * 3,
-                status: 'available',
+            await axios.post(base_url + '/Cart', {
                 users_id: UID.userId,
-                camera_id: camera_id
+                camera_id: camera_id,
             });
 
-            console.log('Item added to database:', formatDate(startDateUTC7), formatDate(endDateUTC7));
+
         } catch (error) {
             console.error("Error adding item to the database:", error.response ? error.response.data : error.message);
             return res.status(500).send("Error adding item to the database");
@@ -306,7 +271,6 @@ app.post('/cart', async (req, res) => {
 
     res.redirect('/cart');
 });
-
 
 
 
@@ -334,9 +298,8 @@ app.post("/removeFromCart", async (req, res) => {
         const { camera_id } = req.body;
         const userId = req.session.USER.userId
 
-        await axios.delete(base_url + `/rental/${camera_id}/${userId}`);
+        await axios.delete(base_url + `/Cart/${camera_id}/${userId}`);
 
-        // รีไดเร็กต์กลับไปที่หน้า cart
         res.redirect("/cart");
     } catch (err) {
         console.error("Error removing item from cart:", err);
@@ -353,19 +316,15 @@ app.post("/updateCart", (req, res) => {
             return res.status(401).json({ error: 'User not logged in' });
         }
 
-        // ค้นหาสินค้าในตะกร้าที่มี camera_id ตรงกัน
         const cartItem = req.session.cart.find(item => item.camera_id === camera_id);
 
         if (cartItem) {
-            // อัปเดตจำนวนสินค้าในตะกร้า
             cartItem.rental_days = parseInt(quantity);  // อัปเดตจำนวน
             cartItem.total_price = cartItem.rental_price_per_day * cartItem.rental_days;  // คำนวณราคาทั้งหมด
         }
 
-        // คำนวณราคาใหม่ทั้งหมด
         const totalPrice = req.session.cart.reduce((sum, item) => sum + (item.total_price || 0), 0);
 
-        // ส่งข้อมูลกลับไปที่ frontend
         res.json({ success: true, totalPrice });
     } catch (err) {
         console.error("Error updating cart:", err);
@@ -385,29 +344,80 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
+
 app.get("/create", (req, res) => {
     res.render("create");
 });
 
 
+
 app.post("/order", async (req, res) => {
     try {
-        // Fetch data for users, rentals, and returns
-        const usersResponse = await axios.get(base_url + '/users');
-        const rentalsResponse = await axios.get(base_url + '/rentals');
-        const returnsResponse = await axios.get(base_url + '/returns');
-        
-        const users = usersResponse.data;
-        const rentals = rentalsResponse.data;
-        const returns = returnsResponse.data;
+        const UserId = req.session.USER.userId;
 
-        // Pass the data to the 'order' view
-        res.render("order", { users, rentals, returns });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error fetching data for the order report');
+        const cartResponse = await axios.get(base_url + '/Cart');
+        const cameraRes = await axios.get(base_url + '/camera');
+
+        const myCart = cartResponse.data.filter(item => item.users_id == UserId);
+
+        let totalPrice = 0;
+        for (const item of myCart) {
+            const camera = cameraRes.data.find(camera => camera.camera_id == item.camera_id);
+            totalPrice += camera.rental_price_per_day;
+        }
+
+        const payment = await axios.post(base_url + '/payment', {
+            users_id: UserId,
+            totalPrice
+        });
+
+        for (const item of myCart) {
+            const payload = {
+                payment_id: payment.data.payment_id,
+                user_id: UserId,
+                camera_id: item.camera_id,
+            };
+
+            await axios.post(base_url + '/Order', payload);
+            await axios.delete(base_url + `/Cart/${item.camera_id}/${UserId}`)
+        }        
+
+        
+
+        res.redirect('/receipt/' + payment.data.payment_id)
+    } catch (error) {
+        console.error("❌ Error placing order:", error);
+        res.status(500).send("Internal Server Error");
     }
 });
+
+
+
+
+app.get('/receipt/:paymetId', async (req, res) => {
+    try {
+        const { paymetId } = req.params
+        const userId = req.session.USER.userId
+
+        console.log(paymetId);
+
+
+        const userRes = await axios.get(base_url + '/users')
+        const paymentRes = await axios.get(base_url + '/payment')
+        const orderRes = await axios.get(base_url + '/Order')
+
+        const user = userRes.data.find(user => user.users_id == userId)
+        const payment = paymentRes.data.find(payment => payment.payment_id == paymetId)
+        const order = orderRes.data.filter(orders => orders.payment_id == paymetId)
+        
+        
+
+    } catch (error) {
+        console.error("Error fetching receipt data:", error);
+        res.status(500).send("Error fetching receipt data");
+    }
+})
+
 
 
 
@@ -425,71 +435,6 @@ app.get("/head", async (req, res) => {
         res.status(500).send('Error');
     }
 });
-
-// Route สำหรับ Logout
-app.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).send("Failed to log out");
-        }
-        // รีไดเร็กต์ผู้ใช้ไปที่หน้า login หลังจากออกจากระบบ
-        res.redirect('/login');
-    });
-});
-
-
-
-app.post('/checkout', async (req, res) => {
-    const { end_date, amount } = req.body;  // รับค่า end_date และ amount
-    
-    const UID = req.session.USER;  // ตรวจสอบว่า session ผู้ใช้มีข้อมูลหรือไม่
-
-    if (!UID || !UID.userId) {
-        return res.status(400).send('User not logged in');
-    }
-
-    try {
-        // ส่งข้อมูลไปยัง API หรือฐานข้อมูลเพื่ออัปเดต end_date ในตาราง Rentals
-        const rentalResponse = await axios.patch(base_url + `/rentals${UID.userId}`, {
-            end_date: end_date  // ส่งค่า end_date ไปยัง API
-        });
-
-        // บันทึกข้อมูลในตาราง Payment
-        const paymentResponse = await axios.post(base_url + '/payment', {
-            amount: amount,  // จำนวนเงินที่ต้องการบันทึก
-            rental_id: rentalResponse.data.rental_id,  // รหัสการเช่าจาก Rentals
-            users_id: UID.userId,  // เชื่อมโยงกับผู้ใช้
-
-        });
-
-        // ถ้าการอัปเดตสำเร็จทั้งหมด
-        res.redirect('/order');  // หรือหน้า success ที่ต้องการ
-    } catch (error) {
-        console.error('Error updating end date in Rentals or Payment:', error);
-        res.status(500).send('Error updating end date or processing payment');
-    }
-});
-
-
-
-// app.put('/rental', async (req, res) => {
-//     const { userId } = req.params;
-//     const { end_date } = req.body;  // รับข้อมูล end_date จากฟอร์ม
-
-//     try {
-//         const conn = await db.getConnection();  // ใช้คำสั่งนี้สำหรับการเชื่อมต่อฐานข้อมูล
-//         const query = "UPDATE Rentals SET end_date = ? WHERE users_id = ?";  // คำสั่ง SQL สำหรับอัปเดต
-//         await conn.execute(query, [end_date, userId]);
-
-//         res.json({ success: true });  // ส่งคำตอบว่าอัปเดตสำเร็จ
-//     } catch (error) {
-//         console.error('Error updating end date:', error);
-//         res.status(500).json({ error: 'Failed to update end date' });
-//     }
-// });
-
-
-
 
 
 
