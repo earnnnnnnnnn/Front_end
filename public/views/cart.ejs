@@ -11,6 +11,8 @@
     <div class="container">
         <div class="cart">
             <h2>Your Cart</h2>
+            <% let totalPrice = 0 %>
+
             <% if (cart.length > 0) { %>
                 <p class="item-count">You have <%= cart.length %> item(s) in your cart.</p>
                 <% cart.forEach(item => { %>
@@ -28,6 +30,7 @@
                             
                         </form>                        
                     </div>
+                    <% totalPrice += item.rental_price_per_day %>
                 <% }); %>
                 <a href="/" class="back">Continue Shopping</a>
             <% } else { %>
