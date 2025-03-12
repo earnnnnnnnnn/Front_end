@@ -14,7 +14,8 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-const base_url = 'https://node76398-project.proen.app.ruk-com.cloud';
+const base_url = "http://localhost:3000";
+// const base_url = 'https://node76398-project.proen.app.ruk-com.cloud';
 app.set("views", path.join(__dirname, "/public/views"));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
