@@ -210,7 +210,8 @@ app.get("/cart", async (req, res) => {
             return res.render("cart", { cart: [], totalPrice: 0, error: 'No items in cart' });
         }
 
-        const totalPrice = cart.reduce((sum, item) => sum + (item.rental_price_per_day || 0), 0);  // บวกค่า rental_price_per_day
+        
+        // const totalPrice = cart.reduce((sum, item) => sum + (item.rental_price_per_day || 0), 0);  // บวกค่า rental_price_per_day
 
         const cameraResponse = await axios.get(base_url + '/camera');
         const cameraData = cameraResponse.data;
@@ -225,12 +226,14 @@ app.get("/cart", async (req, res) => {
                 ...item,
                 cameraname: camera ? camera.cameraname : "Unknown Camera",
                 cameraimg: camera ? camera.cameraimg : "default.jpg",
+                rental_price_per_day: camera ? camera.rental_price_per_day : 0,
             };
         });
+        console.log(enrichedCart);
 
         res.render("cart", {
             cart: enrichedCart,
-            totalPrice: totalPrice
+            // totalPrice: totalPrice
         });
     } catch (err) {
         console.error('Error fetching cart data:', err);
