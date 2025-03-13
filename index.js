@@ -14,7 +14,7 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-const base_url = "10.104.4.206:5001";
+const base_url = "10.104.17.41:3000";
 // const base_url = 'https://node76398-project.proen.app.ruk-com.cloud';
 app.set("views", path.join(__dirname, "/public/views"));
 app.set("view engine", "ejs");
